@@ -1,17 +1,36 @@
 <?php
-include 'db.php';
+require_once 'db.php';
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $username = $_POST['username'];
-    $password = $_POST['password'];
+function signup($name, $email, $password, $role) {
+    global $pdo;
 
-    $query = "SELECT * FROM users WHERE username='$username' AND password='$password'";
-    $result = $conn->query($query);
+    // Check if email already exists
+    $stmt = $pdo->prepare("SELECT * FROM users WHERE email = ?");
+    $stmt->execute([$email]);
 
-    if ($result->num_rows > 0) {
-        echo "Login successful";
-    } else {
-        echo "Invalid credentials";
+    if ($stmt->rowCount() > 0) return ['error' => 'Email already registered'];
+
+    $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+    $stmt = $pdo->prepare("INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)");
+    $stmt->execute([$name, $email, $hashedPassword, $role]);
+
+    return ['success' => true];
+}
+
+function login($email, $password) {
+    global $pdo;
+    $stmt = $pdo->prepare("SELECT * FROM users WHERE email = ?");
+    $stmt->execute([$email]);
+
+    $user = $stmt->fetch();
+    if (!$user || !password_verify($password, $user['password'])) {
+        return ['error' => 'Invalid credentials'];
     }
+
+    $_SESSION['user_id'] = $user['user_id'];
+    $_SESSION['role'] = $user['role'];
+    $_SESSION['name'] = $user['name'];
+
+    return ['success' => true, 'role' => $user['role']];
 }
 ?>
