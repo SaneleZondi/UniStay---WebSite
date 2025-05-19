@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
         usernameElement.textContent = userData.name || 'Student';
     }
 
-    // Load bookings
+    // Load booking
     loadBookings();
 
     // Load saved properties

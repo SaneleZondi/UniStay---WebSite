@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const property = {
     title: "Campus View Room",
-    pricePerMonth: 3000
+    pricePerMonth: 3500
   };
 
   document.getElementById("bookingTitle").textContent = property.title;
