@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Landlord Dashboard - UniStay">
+  <title>Landlord Dashboard – UniStay</title>
+  <link rel="stylesheet" href="assets/style.css" />
+</head>
+<body>
+  <header>
+    <div class="logo">UniStay</div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="messages.html">Messages</a>
+      <a href="my-properties.html">My Properties</a>
+      <a href="#" id="logoutBtn">Log Out</a>
+    </nav>
+  </header>
+
+  <main class="dashboard">
+    <h1>Welcome, <span id="username">Landlord</span> <span aria-hidden="true">👋</span></h1>
+
+    <section class="stats" aria-labelledby="statsHeading">
+      <h2 id="statsHeading">Your Stats</h2>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <h3>Properties Listed</h3>
+          <p id="propertiesCount">0</p>
+        </div>
+        <div class="stat-card">
+          <h3>Active Bookings</h3>
+          <p id="activeBookings">0</p>
+        </div>
+        <div class="stat-card">
+          <h3>Messages</h3>
+          <p id="unreadMessages">0</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="quick-actions">
+      <h2>Quick Actions</h2>
+      <div class="action-buttons">
+        <a href="add-property.html" class="btn-primary">Add New Property</a>
+        <a href="my-properties.html" class="btn-secondary">Manage Properties</a>
+      </div>
+    </section>
+
+    <section class="recent-bookings" aria-labelledby="bookingsHeading">
+      <h2 id="bookingsHeading">Recent Bookings</h2>
+      <div id="bookingList" class="booking-cards">
+        <div class="no-bookings">
+          <p>No recent bookings.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 UniStay. All rights reserved.</p>
+    <nav class="footer-nav">
+      <a href="landlord-help.html">Landlord Resources</a>
+      <a href="contact.html">Contact Support</a>
+    </nav>
+  </footer>
+
+  <script src="js/landlord-dashboard.js"></script>
+</body>
+</html>
