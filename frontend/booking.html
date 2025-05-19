@@ -1,3 +1,32 @@
+<main class="booking-section">
+    <h2>Booking Details</h2>
+    <div class="booking-form">
+      <p><strong>Property:</strong> <span id="bookingTitle">...</span></p>
+      <p><strong>Price per Month:</strong> <span id="bookingPrice">...</span></p>
+
+      <label for="checkin">Check-in Date:</label>
+      <input type="date" id="checkin" aria-describedby="checkinHelp"/>
+
+      <label for="checkout">Check-out Date:</label>
+      <input type="date" id="checkout" />
+
+      <p><strong>Total Cost:</strong> <span id="totalCost">R0</span></p>
+
+      <button onclick="confirmBooking()">Confirm Booking</button>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 UniStay. All rights reserved.</p>
+    <nav class="footer-nav">
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="terms.html">Terms of Service</a>
+    </nav>
+  </footer>
+
+  <script src="js/booking.js"></script>
+</body>
+</html>
 <!DOCTYPE html>
 <html lang="en">
 <head>
