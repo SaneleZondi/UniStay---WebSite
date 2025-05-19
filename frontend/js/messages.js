@@ -24,5 +24,23 @@ document.addEventListener("DOMContentLoaded", () => {
     messagesList.appendChild(div);
   });
 
+  sendBtn.addEventListener("click", () => {
+    const message = messageInput.value.trim();
+    if (message === "") {
+      alert("Please type a message.");
+      return;
+    }
 
+    const div = document.createElement("div");
+    div.className = "message";
+    div.innerHTML = `<strong>You:</strong> <p>${message}</p>`;
+    messagesList.appendChild(div);
+    messageInput.value = "";
+  });
+
+  logoutBtn.addEventListener("click", () => {
+    sessionStorage.removeItem("LoggedInUser");
+    alert("You have been logged out.");
+    window.location.href = "index.html";
+  });
 });
