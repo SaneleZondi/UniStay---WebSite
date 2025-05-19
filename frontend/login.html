@@ -45,8 +45,18 @@
                         </a>
                     </div>
                 </form>
-                <!-- Add Forgot Password Form here (hidden by default) -->
-
+                <!-- Forgot Password Form (hidden by default) -->
+                <form class="forgot-password-form" id="forgotPasswordForm" style="display: none;">
+                    <h2 class="title">Reset Password</h2>
+                    <div class="input-field">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" placeholder="Email" id="resetEmail" required />
+                    </div>
+                    <input type="submit" value="Send Reset Link" class="btn solid" />
+                    <div class="back-to-login">
+                        <a href="#" id="backToLoginLink">Back to Login</a>
+                    </div>
+                </form>
                 <form class="sign-up-form" id="UserSignUpForm">
                     <h2 class="title">Sign Up</h2>
                     <div class="input-field">
@@ -109,5 +119,4 @@
 <footer>
     <p>&copy; 2025 UniStay. All rights reserved.</p>
 </footer>
-
 </html>
