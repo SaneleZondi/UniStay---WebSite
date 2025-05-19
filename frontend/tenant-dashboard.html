@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Tenant Dashboard - UniStay">
+  <title>Tenant Dashboard – UniStay</title>
+  <link rel="stylesheet" href="assets/style.css" />
+</head>
+<body>
+  <header>
+    <div class="logo">UniStay</div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="messages.html">Messages</a>
+      <a href="properties.html">Find Properties</a>
+      <a href="#" id="logoutBtn">Log Out</a>
+    </nav>
+  </header>
+
+  <main class="dashboard">
+    <h1>Welcome, <span id="username">Student</span> <span aria-hidden="true">👋</span></h1>
+
+    <section class="bookings" aria-labelledby="bookingsHeading">
+      <h2 id="bookingsHeading">Your Bookings</h2>
+      <div id="bookingList" class="booking-cards">
+        <div class="no-bookings" id="noBookingsMessage">
+          <p>You don't have any bookings yet.</p>
+          <a href="properties.html" class="btn-primary">Browse Properties</a>
+        </div>
+      </div>
+    </section>
+
+    
+</body>
+</html>
