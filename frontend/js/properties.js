@@ -32,5 +32,15 @@ const properties = [
   },
 ];
 
+async function loadProperties() {
+    try {
+        const response = await fetch('../api/properties.php');
+        const properties = await response.json();
+        displayProperties(properties);
+    } catch (error) {
+        console.error('Error loading properties:', error);
+    }
+};
+
 
 

@@ -9,8 +9,15 @@
 </head>
 
 <body>
-
-    <!-- Add navigations here-->
+    <header>
+        <div class="logo">UniStay</div>
+        <nav id="navLinks">
+            <a href="index.html">Home</a>
+            <a href="properties.html">Browse Properties</a>
+            <a href="login.html" id="loginLink">Get Access</a>
+            <a href="dashboard.html" id="dashboardLink" style="display:none;">Dashboard</a>
+        </nav>
+    </header>
 
     <main>
         <section class="hero">
@@ -25,17 +32,17 @@
                 <div class="property-card">
                     <img src="assets/property1.jpg" alt="Property 1" />
                     <h3>Sunny Side Apartment</h3>
-                    <p>R2,800/month – Durban</p>
+                    <p>R2,800/month - Durban</p>
                 </div>
                 <div class="property-card">
                     <img src="assets/property2.jpg" alt="Property 2" />
                     <h3>Campus View Room</h3>
-                    <p>R3,000/month – Cape Town</p>
+                    <p>R3,000/month - Cape Town</p>
                 </div>
                 <div class="property-card">
                     <img src="assets/property3.jpg" alt="Property 3" />
                     <h3>City Center Flat</h3>
-                    <p>R3,500/month – Johannesburg</p>
+                    <p>R3,500/month - Johannesburg</p>
                 </div>
             </div>
         </section>
@@ -50,8 +57,12 @@
                 <a href="faq.html">FAQ</a>
             </nav>
         </div>
+    </footer>
 
-        <script src="js/script.js"></script>
+    <script type="module">
+  import './assets/js/config.js';
+  import './assets/js/home.js';
+</script>
 </body>
 
 </html>
