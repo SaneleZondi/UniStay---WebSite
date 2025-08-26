@@ -1,6 +1,7 @@
 <?php
 // backend/includes/functions.php
 require_once __DIR__ . '/../config/constants.php';
+require_once __DIR__ . '/../config/database.php';
 
 // Basic sanitization function
 function sanitizeInput($data) {

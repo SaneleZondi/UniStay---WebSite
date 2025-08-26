@@ -1,122 +1,103 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://kit.fontawesome.com/64d58efce2.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="assets/style.css" />
-    <title>UniStay - SignIn or SignUp</title>
+    <title>UniStay - Sign In</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/home.css">
 </head>
-
 <body>
     <div class="container">
-        <div class="forms-container">
-            <div class="signin-signup">
-                <form class="sign-in-form" id="loginForm">
-                    <h2 class="title">Sign In</h2>
-                    <div class="input-field">
-                        <i class="fas fa-user"></i>
-                        <input type="text" placeholder="Username" id="username" required />
+        <div class="left-panel">
+            <div class="content">
+                <h1>UniStay</h1>
+                <p>Welcome back! Sign in to access your student accommodation portal.</p>
+                <div class="image-container">
+                    <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=870&q=80" alt="Student accommodation">
+                </div>
+            </div>
+        </div>
+
+        <div class="right-panel">
+            <div class="form-container">
+                <div class="error-message" id="errorMessage" style="display:none;"></div>
+                <div class="success-message" id="successMessage" style="display:none;"></div>
+
+                <div class="form-header">
+                    <h2>Sign In to Your Account</h2>
+                    <p>Enter your credentials to access your dashboard</p>
+                </div>
+
+                <form class="auth-form" id="loginForm">
+                    <div class="input-group">
+                        <div class="input-field">
+                            <i class="fas fa-envelope"></i>
+                            <input type="email" placeholder="Email Address" id="email" required>
+                        </div>
+                        
+                        <div class="input-field">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" placeholder="Password" id="password" required>
+                        </div>
                     </div>
-                    <div class="input-field">
-                        <i class="fas fa-lock"></i>
-                        <input type="password" placeholder="Password" id="password" required />
-                    </div>
-                    <div class="forgot-password">
+
+                    <div class="form-options">
+                        <label class="remember-me">
+                            <input type="checkbox"> Remember me
+                        </label>
                         <a href="#" id="forgotPasswordLink">Forgot password?</a>
                     </div>
 
-                    <input type="submit" id="log-in" value="Sign In" class="btn solid" a href="properties.html" />
-                    <p class="social-text">Or Sign in with social platforms</p>
-                    <div class="social-media">
-                        <a href="https://www.facebook.com/" class="social-icon">
-                            <i class="fab fa-facebook-f"></i>
-                        </a>
-                        <a href="https://www.twitter.com/" class="social-icon">
-                            <i class="fab fa-twitter"></i>
-                        </a>
-                        <a href="https://www.google.com/" class="social-icon">
-                            <i class="fab fa-google"></i>
-                        </a>
-                        <a href="https://www.linkedin.com/login" class="social-icon">
-                            <i class="fab fa-linkedin-in"></i>
-                        </a>
-                    </div>
-                </form>
-                <!-- Forgot Password Form (hidden by default) -->
-                <form class="forgot-password-form" id="forgotPasswordForm" style="display: none;">
-                    <h2 class="title">Reset Password</h2>
-                    <div class="input-field">
-                        <i class="fas fa-envelope"></i>
-                        <input type="email" placeholder="Email" id="resetEmail" required />
-                    </div>
-                    <input type="submit" value="Send Reset Link" class="btn solid" />
-                    <div class="back-to-login">
-                        <a href="#" id="backToLoginLink">Back to Login</a>
-                    </div>
-                </form>
-                <form class="sign-up-form" id="UserSignUpForm">
-                    <h2 class="title">Sign Up</h2>
-                    <div class="input-field">
-                        <i class="fas fa-user"></i>
-                        <input type="text" placeholder="Name" id="UserName" required />
-                        <span class="text-danger"></span>
-                    </div>
-                    <div class="input-field">
-                        <i class="fas fa-envelope"></i>
-                        <input type="email" placeholder="Email" id="UserEmail" required />
-                        <span class="text-danger"></span>
-                    </div>
-                    <div class="input-field">
-                        <i class="fas fa-lock"></i>
-                        <input type="password" placeholder="Password" id="UserPassword" required />
-                        <span class="text-danger"></span>
-                    </div>
-                    <div class="input-field">
-                        <i class="fas fa-lock"></i>
-                        <input type="password" placeholder="Confirm Password" id="UserConfirmPassword" required />
-                        <span class="text-danger"></span>
-                    </div>
-                    <div class="option-value">
-                        <select id="UserRole" required>
-                            <option value="" disabled selected>Select your role</option>
-                            <option value="tenant">Tenant</option>
-                            <option value="landlord">Landlord</option>
-                        </select>
-                    </div>
-                    <input type="submit" class="btn" value="Sign Up" />
-                </form>
-            </div>
-        </div>
+                    <button type="submit" class="btn primary-btn" id="loginButton">
+                        <span class="button-text">Sign In</span>
+                    </button>
 
-        <div class="panels-container">
-            <div class="panel left-panel">
-                <div class="content">
-                    <h3>New here?</h3>
-                    <p>
-                        Join us to explore amazing property rental opportunities!
-                    </p>
-                    <button class="btn transparent" id="sign-up-btn">Sign Up</button>
-                </div>
-                <img src="img/log.svg" class="image" alt="" />
-            </div>
-            <div class="panel right-panel">
-                <div class="content">
-                    <h3>Already a member?</h3>
-                    <p>
-                        If you already have an account, log in to access your dashboard.
-                    </p>
-                    <button class="btn transparent" id="sign-in-btn">Sign In</button>
-                </div>
+                    <div class="divider">
+                        <span>Or continue with</span>
+                    </div>
 
+                    <div class="social-login">
+                        <button type="button" class="social-btn google">
+                            <i class="fab fa-google"></i> Google
+                        </button>
+                        <button type="button" class="social-btn facebook">
+                            <i class="fab fa-facebook-f"></i> Facebook
+                        </button>
+                    </div>
+
+                    <div class="auth-redirect">
+                        <p>Don't have an account? <a href="register.html">Sign up here</a></p>
+                    </div>
+                </form>
+
+                <form class="auth-form" id="forgotPasswordForm" style="display: none;">
+                    <div class="form-header">
+                        <h2>Reset Your Password</h2>
+                        <p>Enter your email to receive a reset link</p>
+                    </div>
+
+                    <div class="input-group">
+                        <div class="input-field">
+                            <i class="fas fa-envelope"></i>
+                            <input type="email" placeholder="Email Address" id="resetEmail" required>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn primary-btn">Send Reset Link</button>
+
+                    <div class="auth-redirect">
+                        <a href="#" id="backToLoginLink"><i class="fas fa-arrow-left"></i> Back to login</a>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
+
+    <footer>
+        <p>&copy; 2025 UniStay. All rights reserved. <span>Terms of Service</span> | <span>Privacy Policy</span></p>
+    </footer>
+
+    <script src="js/login.js"></script>
 </body>
-<script src="js/script.js"></script>
-<footer>
-    <p>&copy; 2025 UniStay. All rights reserved.</p>
-</footer>
 </html>

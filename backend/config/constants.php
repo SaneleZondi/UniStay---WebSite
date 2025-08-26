@@ -3,7 +3,7 @@
 
 // Application constants
 define('APP_NAME', 'UniStay');
-define('APP_URL', 'http://localhost/unistay');
+define('APP_URL', 'http://localhost/UniStay---Website');
 define('APP_ROOT', dirname(dirname(__DIR__)));
 
 // Security constants
@@ -23,7 +23,7 @@ define('EMAIL_FROM_NAME', 'UniStay Team');
 
 // Database constants
 define('DB_HOST', 'localhost');
-define('DB_USER', 'unistay_user');
-define('DB_PASS', 'secure_password');
+define('DB_USER', 'root');
+define('DB_PASS', '');
 define('DB_NAME', 'unistay_db');
 ?>

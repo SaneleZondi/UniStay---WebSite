@@ -1,15 +1,17 @@
 <?php
-session_start();
+
 
 // Session security configuration
 function secureSession() {
     ini_set('session.cookie_httponly', 1);
-    ini_set('session.cookie_secure', 1); // Enable if using HTTPS
+    ini_set('session.cookie_secure', 0); // Enable if using HTTPS
     ini_set('session.use_strict_mode', 1);
     ini_set('session.gc_maxlifetime', 3600); // 1 hour
-    $_SESSION['last_activity'] = time();
+   
 }
 secureSession();
+
+ $_SESSION['last_activity'] = time();
 
 require_once __DIR__ . '/functions.php';
 

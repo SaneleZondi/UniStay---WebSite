@@ -1,92 +1,85 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 require_once __DIR__ . '/../../includes/functions.php';
 require_once __DIR__ . '/../../includes/auth.php';
+require_once __DIR__ . '/../../config/database.php';
 
 header('Content-Type: application/json');
-header("Access-Control-Allow-Origin: " . APP_URL);
+header("Access-Control-Allow-Origin: *"); // For development only
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With, X-CSRF-Token");
 header("Access-Control-Allow-Credentials: true");
 
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    jsonResponse(['error' => 'Invalid request method'], 405);
+    jsonResponse(['success' => false, 'error' => 'Invalid request method'], 405);
 }
 
 $data = json_decode(file_get_contents('php://input'), true);
+if (!$data) {
+    jsonResponse(['success' => false, 'error' => 'No data received'], 400);
+}
+
 $name = sanitizeInput($data['name'] ?? '');
 $email = sanitizeInput($data['email'] ?? '');
 $password = sanitizeInput($data['password'] ?? '');
 $confirmPassword = sanitizeInput($data['confirmPassword'] ?? '');
 $role = sanitizeInput($data['role'] ?? '');
 
-// Validation
-$errors = [];
-if (empty($name)) $errors['name'] = 'Name is required';
-if (empty($email)) $errors['email'] = 'Email is required';
-if (!filter_var($email, FILTER_VALIDATE_EMAIL)) $errors['email'] = 'Invalid email format';
-if (empty($password)) $errors['password'] = 'Password is required';
-if (strlen($password) < 8) $errors['password'] = 'Password must be at least 8 characters';
-if (!preg_match('/[A-Z]/', $password)) $errors['password'] = 'Need at least 1 uppercase letter';
-if (!preg_match('/[0-9]/', $password)) $errors['password'] = 'Need at least 1 number';
-if ($password !== $confirmPassword) $errors['confirmPassword'] = 'Passwords do not match';
-if (!in_array($role, ['tenant', 'landlord'])) $errors['role'] = 'Invalid role selected';
-
-// Additional validations
-$domain = explode('@', $email)[1] ?? '';
-if (!checkdnsrr($domain, 'MX')) {
-    $errors['email'] = 'Invalid email domain';
+if ($password !== $confirmPassword) {
+    jsonResponse(['success' => false, 'error' => 'Passwords do not match'], 400);
 }
 
-if (!preg_match('/^[a-zA-Z \'-]+$/', $name)) {
-    $errors['name'] = 'Invalid characters in name';
-}
-
-if (!empty($errors)) {
-    jsonResponse(['errors' => $errors], 400);
+if (strlen($password) < 8) {
+    jsonResponse(['success' => false, 'error' => 'Password must be at least 8 characters long'], 400);
 }
 
 try {
     $conn = getDBConnection();
-    
-    // Check email existence
+
     $stmt = $conn->prepare("SELECT id FROM users WHERE email = :email");
     $stmt->bindParam(':email', $email);
     $stmt->execute();
-    
+
     if ($stmt->fetch()) {
-        jsonResponse(['error' => 'Email already registered'], 409);
+        jsonResponse(['success' => false, 'error' => 'Email already registered'], 409);
     }
-    
-    // Hash password
-    $hashedPassword = password_hash($password, PASSWORD_BCRYPT, ['cost' => PASSWORD_HASH_COST]);
+
+    $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
     $verificationToken = generateToken();
-    
-    // Insert user
-    $stmt = $conn->prepare("INSERT INTO users 
-                          (name, email, password, role, verification_token) 
-                          VALUES (:name, :email, :password, :role, :token)");
-    
+
+    $stmt = $conn->prepare("INSERT INTO users (name, email, password, role, verification_token, is_verified) 
+                            VALUES (:name, :email, :password, :role, :token, 1)");
+
     $stmt->bindParam(':name', $name);
     $stmt->bindParam(':email', $email);
     $stmt->bindParam(':password', $hashedPassword);
     $stmt->bindParam(':role', $role);
     $stmt->bindParam(':token', $verificationToken);
-    
-    if (!$stmt->execute()) {
-        throw new PDOException("Failed to create user");
+
+    if ($stmt->execute()) {
+        jsonResponse([
+            'success' => true,
+            'message' => 'Registration successful.',
+            'user_id' => $conn->lastInsertId()
+        ]);
+    } else {
+        jsonResponse(['success' => false, 'error' => 'Failed to create user'], 500);
     }
-    
-    // Send verification email
-    $verificationLink = APP_URL . "/verify-email.php?token=" . $verificationToken;
-    $emailSubject = "Verify your UniStay account";
-    $emailBody = "Hello $name,<br><br>Please click the link below to verify your account:<br><br>
-                 <a href='$verificationLink'>$verificationLink</a><br><br>Thanks,<br>The UniStay Team";
-    
-    if (!sendEmail($email, $emailSubject, $emailBody)) {
-        error_log("Failed to send verification email to $email");
-    }
-    
-    jsonResponse(['message' => 'Registration successful. Please check your email to verify your account.']);
-    
+
 } catch (PDOException $e) {
-    handlePDOException($e);
+    error_log("PDO Exception: " . $e->getMessage());
+    error_log("SQL State: " . $e->getCode());
+    jsonResponse([
+        'success' => false, 
+        'error' => 'Database error: ' . $e->getMessage(),
+        'debug' => 'SQL State: ' . $e->getCode()
+    ], 500);
 }
-?>
