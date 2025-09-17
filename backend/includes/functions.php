@@ -1,14 +1,10 @@
 <?php
-// backend/includes/functions.php
 require_once __DIR__ . '/../config/constants.php';
 require_once __DIR__ . '/../config/database.php';
 
 // Basic sanitization function
 function sanitizeInput($data) {
-    if (is_array($data)) {
-        return array_map('sanitizeInput', $data);
-    }
-    return htmlspecialchars(strip_tags(trim($data)), ENT_QUOTES, 'UTF-8');
+    return htmlspecialchars(strip_tags(trim($data)));
 }
 
 // Generate random token
@@ -86,21 +82,20 @@ function jsonResponse($data, $statusCode = 200, $headers = []) {
     exit;
 }
 
-// Check if email exists
-function emailExists($email) {
-    $conn = getDBConnection();
-    $stmt = $conn->prepare("SELECT id FROM users WHERE email = :email");
-    $stmt->bindParam(':email', $email);
-    $stmt->execute();
-    return $stmt->fetch() !== false;
-}
-
-// Get user by ID
-function getUserById($id) {
-    $conn = getDBConnection();
-    $stmt = $conn->prepare("SELECT id, name, email, role, profile_image FROM users WHERE id = :id");
-    $stmt->bindParam(':id', $id);
-    $stmt->execute();
-    return $stmt->fetch(PDO::FETCH_ASSOC);
+// Search helper function for SQL LIKE queries
+function buildSearchQuery($fields, $searchTerm) {
+    // $fields: array of column names to search
+    // $searchTerm: the term to search for
+    $likeClauses = [];
+    $params = [];
+    foreach ($fields as $field) {
+        $likeClauses[] = "$field LIKE ?";
+        $params[] = '%' . $searchTerm . '%';
+    }
+    $whereClause = implode(' OR ', $likeClauses);
+    return [
+        'clause' => $whereClause,
+        'params' => $params
+    ];
 }
 ?>
