@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Email - UniStay</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        .verification-container {
+            max-width: 500px;
+            margin: 100px auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .verification-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+        
+        .success { color: #4CAF50; }
+        .error { color: #f44336; }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            margin: 1rem;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        
+        .btn-primary {
+            background: #1a237e;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">UniStay</div>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="login.html">Login</a>
+            <a href="register.html">Register</a>
+        </nav>
+    </header>
+
+    <main>
+        <div class="verification-container">
+            <div id="verificationIcon" class="verification-icon">⏳</div>
+            <h1 id="verificationTitle">Verifying Your Email</h1>
+            <p id="verificationMessage">Please wait while we verify your email address...</p>
+            <div id="verificationActions" style="display: none;">
+                <a href="login.html" class="btn btn-primary">Login to Your Account</a>
+                <a href="index.html" class="btn">Return to Home</a>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const token = urlParams.get('token');
+            
+            if (!token) {
+                showVerificationResult('error', 'Invalid Verification', 'No verification token provided.');
+                return;
+            }
+            
+            verifyEmail(token);
+        });
+        
+        async function verifyEmail(token) {
+            try {
+                const response = await fetch(`http://localhost/UniStay---Website/backend/api/auth/verify-email.php?token=${token}`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    showVerificationResult('success', 'Email Verified!', result.message);
+                } else {
+                    showVerificationResult('error', 'Verification Failed', result.error);
+                }
+            } catch (err) {
+                console.error('Verification error:', err);
+                showVerificationResult('error', 'Verification Error', 'An error occurred during verification. Please try again.');
+            }
+        }
+        
+        function showVerificationResult(type, title, message) {
+            const icon = document.getElementById('verificationIcon');
+            const titleElem = document.getElementById('verificationTitle');
+            const messageElem = document.getElementById('verificationMessage');
+            const actions = document.getElementById('verificationActions');
+            
+            icon.textContent = type === 'success' ? '✓' : '✗';
+            icon.className = `verification-icon ${type}`;
+            titleElem.textContent = title;
+            messageElem.textContent = message;
+            actions.style.display = 'block';
+            
+            // Update page title
+            document.title = `${title} - UniStay`;
+        }
+    </script>
+</body>
+</html>

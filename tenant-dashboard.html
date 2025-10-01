@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tenant Dashboard - UniStay</title>
+    <meta name="description" content="Manage your bookings and accommodation preferences">
+    
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/dashboard.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">UniStay</a>
+                
+                <nav>
+                    <ul class="nav-menu">
+                        <li><a href="index.html" class="nav-link">Home</a></li>
+                        <li><a href="properties.html" class="nav-link">Properties</a></li>
+                        <li><a href="messages.html" class="nav-link">Messages</a></li>
+                        <li><a href="#" class="nav-link" id="logoutBtn">Logout</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <!-- Welcome Section -->
+            <section class="dashboard-welcome mb-5">
+                <div class="welcome-card card">
+                    <div class="card-body">
+                        <div class="welcome-content">
+                            <h1>Welcome back, <span id="userName">Student</span>! 👋</h1>
+                            <p>Manage your bookings and find your next stay</p>
+                        </div>
+                        <div class="welcome-stats">
+                            <div class="stat-item">
+                                <span class="stat-number" id="activeBookingsCount">0</span>
+                                <span class="stat-label">Active Bookings</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number" id="totalBookingsCount">0</span>
+                                <span class="stat-label">Total Bookings</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quick Actions -->
+            <section class="dashboard-actions mb-5">
+                <h2 class="section-title">Quick Actions</h2>
+                <div class="action-grid grid-3">
+                    <a href="properties.html" class="action-card card">
+                        <div class="card-body text-center">
+                            <div class="action-icon">🔍</div>
+                            <h3>Find Properties</h3>
+                            <p>Browse available accommodations</p>
+                        </div>
+                    </a>
+                    
+                    <a href="messages.html" class="action-card card">
+                        <div class="card-body text-center">
+                            <div class="action-icon">💬</div>
+                            <h3>Messages</h3>
+                            <p>Contact landlords</p>
+                        </div>
+                    </a>
+                    
+                    <a href="profile.html" class="action-card card">
+                        <div class="card-body text-center">
+                            <div class="action-icon">👤</div>
+                            <h3>My Profile</h3>
+                            <p>Update your information</p>
+                        </div>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Recent Bookings -->
+            <section class="dashboard-bookings">
+                <div class="section-header">
+                    <h2 class="section-title">Your Bookings</h2>
+                    <a href="booking.html" class="btn btn-sm btn-secondary">View All</a>
+                </div>
+                
+                <div class="bookings-container">
+                    <div id="bookingsList" class="bookings-grid">
+                        <!-- Bookings loaded via JavaScript -->
+                    </div>
+                    
+                    <div id="noBookingsMessage" class="empty-state d-none">
+                        <div class="empty-icon">📋</div>
+                        <h3>No bookings yet</h3>
+                        <p>Start by exploring available properties</p>
+                        <a href="properties.html" class="btn btn-primary">Browse Properties</a>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2025 UniStay. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/js/config.js"></script>
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/tenant-dashboard.js"></script>
+</body>
+</html>
