@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Property Details - UniStay</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <style>
+    .property-details {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    .details-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      margin-bottom: 30px;
+    }
+    
+    .property-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+    
+    .property-gallery img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 8px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+    
+    .property-info h1 {
+      color: #2c3e50;
+      margin-bottom: 10px;
+    }
+    
+    .property-location {
+      color: #7f8c8d;
+      margin-bottom: 20px;
+      font-size: 1.1em;
+    }
+    
+    .property-meta {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 15px;
+      margin: 20px 0;
+      padding: 20px;
+      background: #f8f9fa;
+      border-radius: 8px;
+    }
+    
+    .meta-item {
+      text-align: center;
+    }
+    
+    .meta-item strong {
+      display: block;
+      font-size: 1.5em;
+      color: #2c3e50;
+    }
+    
+    .meta-item span {
+      color: #7f8c8d;
+      font-size: 0.9em;
+    }
+    
+    .property-description {
+      margin: 20px 0;
+      line-height: 1.6;
+    }
+    
+    .amenities {
+      margin: 20px 0;
+    }
+    
+    .amenities-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    
+    .amenity-tag {
+      padding: 8px 15px;
+      background: #e8f5e9;
+      border-radius: 20px;
+      font-size: 0.9em;
+      color: #2e7d32;
+    }
+    
+    .landlord-info {
+      margin: 20px 0;
+      padding: 20px;
+      background: #f8f9fa;
+      border-radius: 8px;
+    }
+    
+    .property-actions {
+      text-align: center;
+      margin: 30px 0;
+    }
+    
+    .btn-primary {
+      padding: 15px 30px;
+      font-size: 1.1em;
+      background: linear-gradient(to right, #1a237e, #2980b9);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    
+    .error-message {
+      text-align: center;
+      padding: 40px;
+      color: #e74c3c;
+    }
+    
+    @media (max-width: 768px) {
+      .details-container {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">UniStay</div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="properties.html">Properties</a>
+      <a href="dashboard.html" id="dashboardLink" style="display: none;">Dashboard</a>
+      <a href="login.html" id="loginLink">Login</a>
+    </nav>
+  </header>
+
+  <main class="property-details">
+    <div class="details-container" id="propertyDetail">
+      <!-- Property details will load here -->
+    </div>
+    
+    <section class="property-actions" aria-label="Property actions">
+      <button id="bookNowBtn" class="btn-primary">Book Now</button>
+    </section>
+  </main>
+
+  
+
+  <script src="assets/js/property-details.js"></script>
+  <script src="assets/js/config.js"></script>
+  
+  <footer>
+    <p>&copy; 2025 UniStay. All rights reserved.</p>
+  </footer>
+</body>
+</html>
