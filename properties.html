@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Available Properties – UniStay</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <style>
+    .filters {
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+    }
+    
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .filter-group label {
+      margin-bottom: 5px;
+      font-weight: 600;
+      color: #2c3e50;
+    }
+    
+    .filter-group input,
+    .filter-group select {
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    
+    .search-results {
+      margin: 20px 0;
+      font-size: 14px;
+      color: #666;
+    }
+    
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: #666;
+    }
+    
+    .error-message {
+      background: #ffe6e6;
+      color: #d63031;
+      padding: 15px;
+      border-radius: 5px;
+      margin: 20px 0;
+      text-align: center;
+    }
+	
+	.filter-active {
+    border-color: #3498db !important;
+    background-color: #e3f2fd !important;
+    box-shadow: 0 0 5px rgba(52, 152, 219, 0.3) !important;
+}
+
+.search-active {
+    border-color: #3498db !important;
+    box-shadow: 0 0 8px rgba(52, 152, 219, 0.5) !important;
+    background-color: #f8fcff !important;
+}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">UniStay</div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="login.html" id="loginNav">Login</a>
+      <a href="tenant-dashboard.html" id="dashboardNav" style="display: none;">Dashboard</a>
+      <a href="landlord-dashboard.html" id="landlordDashboardNav" style="display: none;">Landlord Dashboard</a>
+    </nav>
+  </header>
+
+  <main class="listing-page">
+    <h1>Available Properties</h1>
+
+    <div class="search-bar">
+    <input type="text" id="searchInput" placeholder="Search by city, title, or description..." 
+           onkeypress="if(event.key === 'Enter') searchProperties()" />
+    <button onclick="searchProperties()">Search</button>
+    <button onclick="clearFilters()" class="btn-secondary">Clear Filters</button>
+</div>
+
+    <div class="filters">
+      <div class="filter-group">
+        <label for="cityFilter">City</label>
+        <input type="text" id="cityFilter" placeholder="Filter by city">
+      </div>
+      
+      <div class="filter-group">
+        <label for="minPriceFilter">Min Price (R)</label>
+        <input type="number" id="minPriceFilter" placeholder="Min price" min="0">
+      </div>
+      
+      <div class="filter-group">
+        <label for="maxPriceFilter">Max Price (R)</label>
+        <input type="number" id="maxPriceFilter" placeholder="Max price" min="0">
+      </div>
+      
+      <div class="filter-group">
+        <label for="bedroomsFilter">Bedrooms</label>
+        <select id="bedroomsFilter">
+          <option value="">Any</option>
+          <option value="1">1 Bedroom</option>
+          <option value="2">2 Bedrooms</option>
+          <option value="3">3+ Bedrooms</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="search-results" id="searchResults">
+      Loading properties...
+    </div>
+
+    <div class="property-grid" id="propertyGrid">
+      <div class="loading">Loading properties...</div>
+    </div>
+
+    <div class="pagination" id="pagination" style="display: none;">
+      <button id="prevPage" onclick="changePage(-1)">Previous</button>
+      <span id="pageInfo">Page 1 of 1</span>
+      <button id="nextPage" onclick="changePage(1)">Next</button>
+    </div>
+  </main>
+ <script src="assets/js/config.js"></script>
+  <script src="assets/js/properties.js"></script>
+  
+  <footer>
+    <p>&copy; 2025 UniStay. All rights reserved.</p>
+  </footer>
+</body>
+</html>
