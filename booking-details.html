@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Details - UniStay</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        .booking-details-container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+        
+        .booking-info {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        
+        .actions-sidebar {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 10px;
+            height: fit-content;
+        }
+        
+        .detail-section {
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .detail-section:last-child {
+            border-bottom: none;
+        }
+        
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 0.5rem 0;
+            padding: 0.5rem 0;
+        }
+        
+        .detail-label {
+            font-weight: 500;
+            color: #666;
+        }
+        
+        .detail-value {
+            font-weight: 600;
+        }
+        
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .status-pending { background: #fff3cd; color: #856404; }
+        .status-approved { background: #d4edda; color: #155724; }
+        .status-completed { background: #d1ecf1; color: #0c5460; }
+        .status-cancelled { background: #f8d7da; color: #721c24; }
+        .status-rejected { background: #f8d7da; color: #721c24; }
+        
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #1a237e;
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -2rem;
+            top: 0.3rem;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #1a237e;
+        }
+        
+        .timeline-date {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 0.25rem;
+        }
+        
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        
+        .btn {
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary { background: #1a237e; color: white; }
+        .btn-success { background: #28a745; color: white; }
+        .btn-warning { background: #ffc107; color: black; }
+        .btn-danger { background: #dc3545; color: white; }
+        .btn-secondary { background: #6c757d; color: white; }
+        
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .payment-info {
+            background: #e8f5e9;
+            padding: 1rem;
+            border-radius: 5px;
+            margin: 1rem 0;
+        }
+        
+        .message-system {
+            margin-top: 2rem;
+        }
+        
+        .messages-container {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 1rem;
+            background: white;
+            margin-bottom: 1rem;
+        }
+        
+        .message {
+            margin: 0.5rem 0;
+            padding: 0.75rem;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .message.own {
+            background: #e3f2fd;
+            margin-left: 2rem;
+            border-color: #bbdefb;
+        }
+        
+        .message.other {
+            background: #f5f5f5;
+            margin-right: 2rem;
+            border-color: #e0e0e0;
+        }
+        
+        .message-time {
+            font-size: 0.7rem;
+            color: #666;
+            margin-top: 0.25rem;
+            text-align: right;
+        }
+        
+        .message-input {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        
+        .message-input input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        
+        .no-messages {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+            font-style: italic;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 1rem;
+            color: #666;
+        }
+        
+        @media (max-width: 768px) {
+            .booking-details-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .message.own {
+                margin-left: 1rem;
+            }
+            
+            .message.other {
+                margin-right: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+ 
+    </header>
+	
+	 <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">UniStay</a>
+                <nav class="nav">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="tenant-dashboard.html" class="nav-link" id="tenantDashboardLink" style="display: none;">Dashboard</a>
+					<a href="lenant-dashboard.html" class="nav-link" id="landlordDashboardLink" style="display: none;">Dashboard</a>
+                    <a href="#" class="nav-link" id="logoutBtn" style="display: none;">Logout</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="booking-details-container">
+            <div class="booking-info">
+                <h1>Booking Details <span id="bookingStatus" class="status-badge"></span></h1>
+                <p id="bookingNumber" class="text-muted">Loading...</p>
+                
+                <div class="detail-section">
+                    <h3>Property Information</h3>
+                    <div id="propertyDetails">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
+                </div>
+                
+                <div class="detail-section">
+                    <h3>Booking Dates & Guests</h3>
+                    <div id="bookingDates">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
+                </div>
+                
+                <div class="detail-section">
+                    <h3>Financial Details</h3>
+                    <div id="financialDetails">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
+                </div>
+                
+                <div class="detail-section">
+                    <h3>Booking Timeline</h3>
+                    <div class="timeline" id="bookingTimeline">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
+                </div>
+                
+                <div class="detail-section message-system" id="messageSection" style="display: none;">
+                    <h3 id="messageSectionTitle">Messages</h3>
+                    <div class="messages-container" id="messagesContainer">
+                        <!-- Messages will be loaded here -->
+                    </div>
+                    <div class="message-input">
+                        <input type="text" id="messageInput" placeholder="Type your message...">
+                        <button onclick="sendBookingMessage()" class="btn btn-primary">Send</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="actions-sidebar">
+                <h3>Booking Actions</h3>
+                <div class="action-buttons" id="actionButtons">
+                    <!-- Action buttons will be populated based on user role and booking status -->
+                </div>
+                
+                <div id="paymentInfo" class="payment-info" style="display: none;">
+                    <h4>Payment Information</h4>
+                    <div id="paymentDetails">
+                        <!-- Payment details will be shown here -->
+                    </div>
+                </div>
+                
+                <div class="contact-info">
+                    <h4>Contact Information</h4>
+                    <div id="contactDetails">
+                        <!-- Contact details will be populated -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+<script>
+    let currentBooking = null;
+    let currentUser = null;
+    let currentUserRole = null;
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get booking ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const bookingId = urlParams.get('id');
+        
+        if (!bookingId) {
+            showNotification('No booking specified.', 'error');
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 2000);
+            return;
+        }
+        
+        // Check authentication and get user info
+        currentUser = sessionStorage.getItem('LoggedInUser');
+        currentUserRole = sessionStorage.getItem('UserRole');
+        
+        if (!currentUser) {
+            showNotification('Please login to view booking details.', 'error');
+            setTimeout(() => {
+                window.location.href = 'login.html';
+            }, 2000);
+            return;
+        }
+        
+        // Update navigation based on user role
+        updateNavigation();
+        
+        // Load booking details
+        loadBookingDetails(bookingId);
+    });
+    
+    function updateNavigation() {
+        const tenantLink = document.getElementById('tenantDashboardLink');
+        const landlordLink = document.getElementById('landlordDashboardLink');
+        
+        if (currentUserRole === 'tenant' && tenantLink) {
+            tenantLink.style.display = 'inline';
+        } else if (currentUserRole === 'landlord' && landlordLink) {
+            landlordLink.style.display = 'inline';
+        }
+    }
+    
+    async function loadBookingDetails(bookingId) {
+        try {
+            const response = await fetch(`http://localhost/UniStay---Website/backend/api/bookings/read.php?id=${bookingId}`, {
+                credentials: 'include'
+            });
+            
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            
+            const result = await response.json();
+            
+            if (result.error) throw new Error(result.error);
+            
+            currentBooking = result.booking;
+            displayBookingDetails(currentBooking);
+            loadPaymentInfo(bookingId);
+            
+        } catch (err) {
+            console.error('Error loading booking details:', err);
+            showNotification('Error loading booking details: ' + err.message, 'error');
+        }
+    }
+    
+    function displayBookingDetails(booking) {
+        // Update basic info
+        document.getElementById('bookingNumber').textContent = `Booking #${booking.id}`;
+        document.getElementById('bookingStatus').textContent = booking.status.toUpperCase();
+        document.getElementById('bookingStatus').className = `status-badge status-${booking.status.toLowerCase()}`;
+        
+        // Property details
+        document.getElementById('propertyDetails').innerHTML = `
+            <div class="detail-row">
+                <span class="detail-label">Property:</span>
+                <span class="detail-value">${escapeHtml(booking.property_title)}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Location:</span>
+                <span class="detail-value">${escapeHtml(booking.property_city)}, ${escapeHtml(booking.property_address)}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Landlord:</span>
+                <span class="detail-value">${escapeHtml(booking.landlord_name)}</span>
+            </div>
+        `;
+        
+        // Booking dates
+        document.getElementById('bookingDates').innerHTML = `
+            <div class="detail-row">
+                <span class="detail-label">Check-in:</span>
+                <span class="detail-value">${formatDate(booking.check_in)}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Check-out:</span>
+                <span class="detail-value">${formatDate(booking.check_out)}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Duration:</span>
+                <span class="detail-value">${booking.duration} month${booking.duration !== 1 ? 's' : ''}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Guests:</span>
+                <span class="detail-value">${booking.guests}</span>
+            </div>
+            ${booking.special_requests ? `
+            <div class="detail-row">
+                <span class="detail-label">Special Requests:</span>
+                <span class="detail-value">${escapeHtml(booking.special_requests)}</span>
+            </div>
+            ` : ''}
+        `;
+        
+        // Financial details
+        const monthlyRate = (booking.total_price / booking.duration).toFixed(2);
+        document.getElementById('financialDetails').innerHTML = `
+            <div class="detail-row">
+                <span class="detail-label">Monthly Rate:</span>
+                <span class="detail-value">R${monthlyRate}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Duration:</span>
+                <span class="detail-value">${booking.duration} months</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Subtotal:</span>
+                <span class="detail-value">R${(monthlyRate * booking.duration).toFixed(2)}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Service Fee (5%):</span>
+                <span class="detail-value">R${(monthlyRate * booking.duration * 0.05).toFixed(2)}</span>
+            </div>
+            <div class="detail-row" style="border-top: 1px solid #ddd; padding-top: 1rem;">
+                <span class="detail-label"><strong>Total Amount:</strong></span>
+                <span class="detail-value"><strong>R${booking.total_price}</strong></span>
+            </div>
+        `;
+        
+        // Timeline
+        document.getElementById('bookingTimeline').innerHTML = `
+            <div class="timeline-item">
+                <div class="timeline-date">${formatDateTime(booking.created_at)}</div>
+                <div>Booking created</div>
+            </div>
+            ${booking.status === 'cancelled' ? `
+            <div class="timeline-item">
+                <div class="timeline-date">${formatDateTime(booking.updated_at)}</div>
+                <div>Booking cancelled</div>
+            </div>
+            ` : ''}
+            ${booking.status === 'approved' ? `
+            <div class="timeline-item">
+                <div class="timeline-date">${formatDateTime(booking.updated_at)}</div>
+                <div>Booking approved by landlord</div>
+            </div>
+            ` : ''}
+            ${booking.status === 'completed' ? `
+            <div class="timeline-item">
+                <div class="timeline-date">${formatDateTime(booking.updated_at)}</div>
+                <div>Booking completed</div>
+            </div>
+            ` : ''}
+        `;
+        
+        // Contact details
+        const tenantName = booking.tenant_name || booking.guest_name || 'Guest';
+        const tenantEmail = booking.tenant_email || booking.guest_email;
+        document.getElementById('contactDetails').innerHTML = `
+            <div class="detail-row">
+                <span class="detail-label">Tenant:</span>
+                <span class="detail-value">${escapeHtml(tenantName)}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Email:</span>
+                <span class="detail-value">${escapeHtml(tenantEmail)}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Landlord:</span>
+                <span class="detail-value">${escapeHtml(booking.landlord_name)}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Email:</span>
+                <span class="detail-value">${escapeHtml(booking.landlord_email)}</span>
+            </div>
+        `;
+        
+        // Show message system if booking is active AND we have someone to message
+        const canMessage = ['pending', 'approved'].includes(booking.status) && 
+                          (currentUserRole === 'tenant' || currentUserRole === 'landlord');
+
+        if (canMessage) {
+            document.getElementById('messageSection').style.display = 'block';
+            document.getElementById('messageSectionTitle').textContent = `Chat with ${currentUserRole === 'tenant' ? 'Landlord' : 'Tenant'}`;
+            loadMessages(booking.id);
+        }
+        
+        // Setup action buttons based on user role and booking status
+        setupActionButtons(booking);
+    }
+    
+    function setupActionButtons(booking) {
+        const actionButtons = document.getElementById('actionButtons');
+        let buttonsHTML = '';
+        
+        if (currentUserRole === 'tenant') {
+            // Tenant actions
+            if (booking.status === 'completed') {
+                // Show review button for completed bookings regardless of date
+                buttonsHTML = `
+                    ${!booking.has_review ? `
+                        <button class="btn btn-primary" onclick="showReviewForm(${booking.id}, '${escapeHtml(booking.property_title)}')">Write Review</button>
+                    ` : '<p>✅ You have already reviewed this stay</p>'}
+                `;
+            }
+        } else if (currentUserRole === 'landlord' && booking.landlord_id == sessionStorage.getItem('UserId')) {
+            // Landlord actions for their own property
+            if (booking.status === 'pending') {
+                buttonsHTML = `
+                    <button class="btn btn-success" onclick="updateBookingStatus(${booking.id}, 'approved')">Approve Booking</button>
+                    <button class="btn btn-danger" onclick="updateBookingStatus(${booking.id}, 'rejected')">Reject Booking</button>
+                `;
+            } else if (booking.status === 'approved') {
+                buttonsHTML = `
+                    <button class="btn btn-primary" onclick="updateBookingStatus(${booking.id}, 'completed')">Mark as Completed</button>
+                `;
+            }
+        } else if (currentUserRole === 'admin') {
+            // Admin actions
+            buttonsHTML = `
+                <button class="btn btn-secondary" onclick="adminCancelBooking(${booking.id})">Cancel (Admin)</button>
+            `;
+        }
+        
+        if (!buttonsHTML) {
+            buttonsHTML = '<p>No actions available for this booking status.</p>';
+        }
+        
+        actionButtons.innerHTML = buttonsHTML;
+    }
+    
+    async function loadPaymentInfo(bookingId) {
+        try {
+            const response = await fetch(`http://localhost/UniStay---Website/backend/api/payments/receipts.php?booking_id=${bookingId}`, {
+                credentials: 'include'
+            });
+            
+            if (response.ok) {
+                const result = await response.json();
+                if (result.success && result.payment) {
+                    document.getElementById('paymentInfo').style.display = 'block';
+                    document.getElementById('paymentDetails').innerHTML = `
+                        <div class="detail-row">
+                            <span class="detail-label">Status:</span>
+                            <span class="detail-value">${result.payment.status.toUpperCase()}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Amount:</span>
+                            <span class="detail-value">R${result.payment.amount}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Date:</span>
+                            <span class="detail-value">${formatDate(result.payment.payment_date)}</span>
+                        </div>
+                        ${result.payment.transaction_id ? `
+                        <div class="detail-row">
+                            <span class="detail-label">Transaction ID:</span>
+                            <span class="detail-value">${result.payment.transaction_id}</span>
+                        </div>
+                        ` : ''}
+                    `;
+                }
+            }
+        } catch (err) {
+            console.error('Error loading payment info:', err);
+        }
+    }
+    
+    // MESSAGING FUNCTIONS
+    async function loadMessages(bookingId) {
+        try {
+            const messagesContainer = document.getElementById('messagesContainer');
+            messagesContainer.innerHTML = '<div class="loading">Loading messages...</div>';
+            
+            // Determine who we're messaging with
+            const otherUserId = currentUserRole === 'tenant' ? currentBooking.landlord_id : currentBooking.tenant_id;
+            
+            if (!otherUserId) {
+                showNoMessages();
+                return;
+            }
+            
+            // Load messages between current user and the other user
+            const response = await fetch(`http://localhost/UniStay---Website/backend/api/messages/conversation.php?user_id=${otherUserId}`, {
+                credentials: 'include'
+            });
+            
+            if (response.ok) {
+                const result = await response.json();
+                if (result.success && result.messages) {
+                    displayBookingMessages(result.messages, otherUserId);
+                } else {
+                    showNoMessages();
+                }
+            } else {
+                showNoMessages();
+            }
+            
+        } catch (err) {
+            console.error('Error loading messages:', err);
+            showNoMessages();
+        }
+    }
+
+    function displayBookingMessages(messages, otherUserId) {
+        const messagesContainer = document.getElementById('messagesContainer');
+        
+        if (!messages || messages.length === 0) {
+            showNoMessages();
+            return;
+        }
+        
+        messagesContainer.innerHTML = messages.map(msg => `
+            <div class="message ${msg.is_own ? 'own' : 'other'}">
+                <strong>${msg.is_own ? 'You' : (currentUserRole === 'tenant' ? escapeHtml(currentBooking.landlord_name) : escapeHtml(currentBooking.tenant_name || 'Tenant'))}:</strong>
+                ${escapeHtml(msg.message)}
+                <div class="message-time">${formatDateTime(msg.created_at)}</div>
+            </div>
+        `).join('');
+        
+        // Scroll to bottom
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    function showNoMessages() {
+        const messagesContainer = document.getElementById('messagesContainer');
+        messagesContainer.innerHTML = `
+            <div class="no-messages">
+                <p>No messages yet. Start the conversation!</p>
+            </div>
+        `;
+    }
+
+    async function sendBookingMessage() {
+        const messageInput = document.getElementById('messageInput');
+        const message = messageInput.value.trim();
+        
+        if (!message) {
+            showNotification('Please enter a message', 'warning');
+            return;
+        }
+        
+        // Determine receiver ID based on user role
+        let receiverId;
+        if (currentUserRole === 'tenant') {
+            receiverId = currentBooking.landlord_id;
+        } else if (currentUserRole === 'landlord') {
+            receiverId = currentBooking.tenant_id;
+        } else {
+            showNotification('Only tenants and landlords can send messages', 'error');
+            return;
+        }
+        
+        if (!receiverId) {
+            showNotification('Cannot determine who to message', 'error');
+            return;
+        }
+
+        try {
+            // Add message to UI immediately
+            addBookingMessageToUI(message, true);
+            const originalMessage = messageInput.value;
+            messageInput.value = '';
+            
+            // Send message to server
+            const response = await fetch('http://localhost/UniStay---Website/backend/api/messages/send.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
+                body: JSON.stringify({
+                    receiver_id: receiverId,
+                    property_id: currentBooking.property_id,
+                    message: message,
+                    subject: `Re: Booking #${currentBooking.id} - ${currentBooking.property_title}`
+                })
+            });
+            
+            const result = await response.json();
+            
+            if (!result.success) {
+                // Remove the message from UI if sending failed
+                removeLastMessage();
+                messageInput.value = originalMessage;
+                throw new Error(result.error);
+            }
+            
+            showNotification('Message sent successfully', 'success');
+            
+            // Reload messages to get the latest
+            loadMessages(currentBooking.id);
+            
+        } catch (err) {
+            console.error('Error sending message:', err);
+            showNotification('Error sending message: ' + err.message, 'error');
+        }
+    }
+
+    function addBookingMessageToUI(message, isOwnMessage = false) {
+        const messagesContainer = document.getElementById('messagesContainer');
+        
+        // Remove no messages display if present
+        const noMessages = messagesContainer.querySelector('.no-messages');
+        if (noMessages) {
+            noMessages.remove();
+        }
+        
+        // Remove loading message if present
+        const loading = messagesContainer.querySelector('.loading');
+        if (loading) {
+            loading.remove();
+        }
+        
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${isOwnMessage ? 'own' : 'other'}`;
+        messageDiv.innerHTML = `
+            <strong>${isOwnMessage ? 'You' : (currentUserRole === 'tenant' ? escapeHtml(currentBooking.landlord_name) : escapeHtml(currentBooking.tenant_name || 'Tenant'))}:</strong>
+            ${escapeHtml(message)}
+            <div class="message-time">${formatDateTime(new Date().toISOString())}</div>
+        `;
+        
+        messagesContainer.appendChild(messageDiv);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    function removeLastMessage() {
+        const messagesContainer = document.getElementById('messagesContainer');
+        const messages = messagesContainer.querySelectorAll('.message');
+        if (messages.length > 0) {
+            messages[messages.length - 1].remove();
+        }
+    }
+    
+    // Action functions
+    async function cancelBooking(bookingId) {
+        if (!confirm('Are you sure you want to cancel this booking?')) return;
+        
+        try {
+            const response = await fetch('http://localhost/UniStay---Website/backend/api/bookings/update.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
+                body: JSON.stringify({
+                    booking_id: bookingId,
+                    status: 'cancelled'
+                })
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                showNotification('Booking cancelled successfully', 'success');
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1500);
+            } else {
+                throw new Error(result.error);
+            }
+        } catch (err) {
+            showNotification('Error cancelling booking: ' + err.message, 'error');
+        }
+    }
+    
+    async function updateBookingStatus(bookingId, status) {
+        const action = status === 'approved' ? 'approve' : status === 'rejected' ? 'reject' : 'complete';
+        
+        if (!confirm(`Are you sure you want to ${action} this booking?`)) return;
+        
+        try {
+            const response = await fetch('http://localhost/UniStay---Website/backend/api/bookings/update.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
+                body: JSON.stringify({
+                    booking_id: bookingId,
+                    status: status
+                })
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                showNotification(`Booking ${action}ed successfully`, 'success');
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1500);
+            } else {
+                throw new Error(result.error);
+            }
+        } catch (err) {
+            showNotification(`Error ${action}ing booking: ` + err.message, 'error');
+        }
+    }
+    
+    function showReviewForm(bookingId, propertyTitle) {
+        // This would open the review form
+        if (typeof window.reviewSystem !== 'undefined') {
+            window.reviewSystem.showReviewForm(bookingId, propertyTitle);
+        } else {
+            // Fallback to the tenant dashboard review system
+            if (typeof showReviewForm === 'function') {
+                showReviewForm(bookingId, propertyTitle);
+            } else {
+                showNotification('Review system not loaded', 'error');
+            }
+        }
+    }
+
+    // Balance calculation function (needed for payment logic)
+    async function getBookingBalance(bookingId) {
+        try {
+            const response = await fetch(`http://localhost/UniStay---Website/backend/api/bookings/balance.php?booking_id=${bookingId}`, {
+                credentials: 'include'
+            });
+            
+            if (response.ok) {
+                const result = await response.json();
+                if (result.success) {
+                    return result.balance || 0;
+                }
+            }
+        } catch (err) {
+            console.error('Error getting booking balance:', err);
+        }
+        return 0;
+    }
+    
+    // Utility functions
+    function formatDate(dateString) {
+        return new Date(dateString).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+    }
+    
+    function formatDateTime(dateTimeString) {
+        return new Date(dateTimeString).toLocaleString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+    }
+
+    function escapeHtml(unsafe) {
+        if (!unsafe) return '';
+        return unsafe
+            .toString()
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+
+    function showNotification(message, type = 'info') {
+        // Remove any existing notifications
+        document.querySelectorAll('.notification').forEach(n => n.remove());
+        
+        const notification = document.createElement('div');
+        notification.className = `notification notification-${type}`;
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 8px;
+            color: white;
+            z-index: 10000;
+            font-weight: 600;
+            max-width: 400px;
+            background: ${getNotificationColor(type)};
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        `;
+        
+        notification.innerHTML = `
+            <span class="notification-icon">${getNotificationIcon(type)}</span>
+            <span class="notification-message">${message}</span>
+        `;
+        
+        document.body.appendChild(notification);
+        
+        // Animate in
+        setTimeout(() => {
+            notification.style.transform = 'translateX(0)';
+        }, 100);
+        
+        // Auto-remove after 5 seconds
+        setTimeout(() => {
+            if (notification.parentElement) {
+                notification.style.transform = 'translateX(400px)';
+                setTimeout(() => notification.remove(), 300);
+            }
+        }, 5000);
+        
+        // Click to dismiss
+        notification.addEventListener('click', () => {
+            notification.style.transform = 'translateX(400px)';
+            setTimeout(() => notification.remove(), 300);
+        });
+    }
+
+    function getNotificationIcon(type) {
+        const icons = {
+            success: '✅',
+            error: '❌',
+            warning: '⚠️',
+            info: 'ℹ️'
+        };
+        return icons[type] || icons.info;
+    }
+
+    function getNotificationColor(type) {
+        const colors = {
+            success: '#27ae60',
+            error: '#e74c3c',
+            warning: '#f39c12',
+            info: '#3498db'
+        };
+        return colors[type] || colors.info;
+    }
+</script>
+</body>
+</html>

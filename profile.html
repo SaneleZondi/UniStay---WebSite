@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - UniStay</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Profile-specific styles that complement the main style.css */
+        .profile-container {
+            max-width: 800px;
+            margin: var(--space-xl) auto;
+            padding: var(--space-xl);
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .profile-header {
+            text-align: center;
+            margin-bottom: var(--space-lg);
+            padding-bottom: var(--space-md);
+            border-bottom: 2px solid var(--gray-light);
+        }
+        
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--accent-green));
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 0 auto var(--space-md);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .profile-info {
+            background: var(--light);
+            padding: var(--space-lg);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--space-lg);
+            border-left: 4px solid var(--accent-green);
+        }
+        
+        .profile-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-md);
+        }
+        
+        .profile-info-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-xs) 0;
+            border-bottom: 1px solid var(--gray-light);
+        }
+        
+        .profile-info-item:last-child {
+            border-bottom: none;
+        }
+        
+        .profile-info-label {
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .profile-info-value {
+            color: var(--gray-dark);
+            font-weight: 500;
+        }
+        
+        .form-section {
+            margin-bottom: var(--space-lg);
+            padding: var(--space-lg);
+            border: 1px solid var(--gray-light);
+            border-radius: var(--radius-lg);
+            background: var(--white);
+        }
+        
+        .form-section h3 {
+            margin-bottom: var(--space-md);
+            color: var(--dark);
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: var(--space-sm);
+            font-size: 1.3rem;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-md);
+            margin-bottom: var(--space-md);
+        }
+        
+        .form-group {
+            margin-bottom: var(--space-md);
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: var(--space-xs);
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .form-group input, 
+        .form-group select, 
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--gray-light);
+            border-radius: var(--radius-md);
+            font-size: 1rem;
+            transition: var(--transition);
+            font-family: inherit;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(26, 35, 126, 0.1);
+        }
+        
+        .form-group input:read-only {
+            background-color: var(--light);
+            color: var(--gray);
+            cursor: not-allowed;
+        }
+        
+        .btn-primary {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: var(--white);
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: var(--space-md);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .btn-primary:disabled {
+            background: var(--gray);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .completion-status {
+            background: #fff3cd;
+            padding: var(--space-md);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--space-lg);
+            border-left: 4px solid var(--warning);
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--gray-light);
+            border-radius: 4px;
+            margin: var(--space-sm) 0;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-green), var(--success));
+            transition: width 0.3s ease;
+            border-radius: 4px;
+        }
+        
+        .verification-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-xs);
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .verified { 
+            background: #d4edda; 
+            color: #155724; 
+        }
+        
+        .unverified { 
+            background: #fff3cd; 
+            color: #856404; 
+        }
+        
+        .required-field::after {
+            content: " *";
+            color: var(--error);
+        }
+        
+        .field-error {
+            color: var(--error);
+            font-size: 0.85rem;
+            margin-top: var(--space-xs);
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+        }
+        
+        .profile-indicator {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        
+        .profile-link {
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+            text-decoration: none;
+            color: var(--white);
+            padding: var(--space-xs);
+            border-radius: var(--radius-md);
+            transition: var(--transition);
+        }
+        
+        .profile-link:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        
+        .completion-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent-green);
+            position: absolute;
+            top: 0;
+            right: 0;
+            border: 2px solid var(--primary);
+        }
+        
+        .error-state {
+            text-align: center;
+            padding: var(--space-xl);
+            color: var(--gray-dark);
+        }
+        
+        .error-state h2 {
+            color: var(--error);
+            margin-bottom: var(--space-md);
+        }
+        
+        @media (max-width: 768px) {
+            .profile-container {
+                margin: var(--space-md);
+                padding: var(--space-md);
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .profile-info-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .profile-info-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: var(--space-xs);
+            }
+        }
+    </style>
+</head>
+<body>
+	
+	 <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">UniStay</a>
+                <nav class="nav">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="tenant-dashboard.html" class="nav-link" id="tenantDashboardLink" style="display: none;">Dashboard</a>
+					<a href="lenant-dashboard.html" class="nav-link" id="landlordDashboardLink" style="display: none;">Dashboard</a>
+                    <a href="#" class="nav-link" id="logoutBtn" style="display: none;">Logout</a>
+                <div class="profile-indicator">
+                        <a href="profile.html" class="profile-link">
+                            <span class="avatar" id="navAvatar">U</span>
+                            <span class="completion-dot" id="completionDot"></span>
+                        </a>
+                    </div>
+				</nav>
+            </div>
+        </div>
+    </header>
+	
+
+
+    <main class="main">
+        <div class="container">
+            <div class="profile-container">
+                <div class="profile-header">
+                    <div class="profile-avatar" id="userAvatar">U</div>
+                    <h1>My Profile</h1>
+                    <p>Manage your personal information and preferences</p>
+                </div>
+                
+                <!-- Profile Completion Status -->
+                <div class="completion-status" id="completionStatus" style="display: none;">
+                    <h3>Profile Completion</h3>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                    </div>
+                    <p id="completionText">Complete your profile to access all features</p>
+                </div>
+                
+                <!-- Profile Information Display -->
+                <div class="profile-info">
+                    <h3>Account Information</h3>
+                    <div class="profile-info-grid">
+                        <div class="profile-info-item">
+                            <span class="profile-info-label">Account Type:</span>
+                            <span class="profile-info-value" id="displayRole"></span>
+                        </div>
+                        <div class="profile-info-item">
+                            <span class="profile-info-label">Email Verification:</span>
+                            <span class="profile-info-value" id="displayVerification"></span>
+                        </div>
+                        <div class="profile-info-item">
+                            <span class="profile-info-label">Profile Status:</span>
+                            <span class="profile-info-value" id="displayProfileStatus"></span>
+                        </div>
+                        <div class="profile-info-item">
+                            <span class="profile-info-label">Member Since:</span>
+                            <span class="profile-info-value" id="displayJoinDate"></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <form id="profileForm">
+                    <!-- Personal Information Section -->
+                    <div class="form-section">
+                        <h3>Personal Information</h3>
+                        
+                        <div class="form-group">
+                            <label>Full Name (as registered)</label>
+                            <input type="text" id="displayName" readonly>
+                            <small class="form-text">
+                                Name cannot be changed for security reasons.
+                            </small>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>First Name</label>
+                                <input type="text" id="firstName" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label>Last Name</label>
+                                <input type="text" id="lastName" readonly>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" name="email" readonly>
+                            <small class="form-text">
+                                Email address cannot be changed for security reasons.
+                            </small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="phone" class="required-field">Phone Number</label>
+                            <input type="tel" id="phone" name="phone" placeholder="+27 12 345 6789" required>
+                            <small class="form-text">
+                                We'll use this to contact you about your bookings
+                            </small>
+                        </div>
+                    </div>
+                    
+                    <!-- Address Information Section -->
+                    <div class="form-section">
+                        <h3>Address Information</h3>
+                        
+                        <div class="form-group">
+                            <label for="address" class="required-field">Street Address</label>
+                            <input type="text" id="address" name="address" placeholder="123 Main Street" required>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="province" class="required-field">Province</label>
+                                <select id="province" name="province" required>
+                                    <option value="">Select Province</option>
+                                    <option value="Eastern Cape">Eastern Cape</option>
+                                    <option value="Free State">Free State</option>
+                                    <option value="Gauteng">Gauteng</option>
+                                    <option value="KwaZulu-Natal">KwaZulu-Natal</option>
+                                    <option value="Limpopo">Limpopo</option>
+                                    <option value="Mpumalanga">Mpumalanga</option>
+                                    <option value="Northern Cape">Northern Cape</option>
+                                    <option value="North West">North West</option>
+                                    <option value="Western Cape">Western Cape</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="country" class="required-field">Country</label>
+                                <select id="country" name="country" required>
+                                    <option value="">Select Country</option>
+                                    <option value="South Africa">South Africa</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="stateProvince">State/Province (if outside South Africa)</label>
+                            <input type="text" id="stateProvince" name="stateProvince" placeholder="Enter state or province">
+                        </div>
+                    </div>
+                    
+                    <!-- Additional Information Section -->
+                    <div class="form-section">
+                        <h3>Additional Information</h3>
+                        
+                        <div class="form-group">
+                            <label for="dateOfBirth">Date of Birth</label>
+                            <input type="date" id="dateOfBirth" name="dateOfBirth">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="gender">Gender</label>
+                            <select id="gender" name="gender">
+                                <option value="">Prefer not to say</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="occupation">Occupation/Student Status</label>
+                            <input type="text" id="occupation" name="occupation" placeholder="e.g., Student, Working Professional">
+                        </div>
+                    </div>
+                    
+                    <!-- For Students Only -->
+                    <div class="form-section" id="studentSection" style="display: none;">
+                        <h3>Student Information</h3>
+                        
+                        <div class="form-group">
+                            <label for="institution" class="required-field">Educational Institution</label>
+                            <input type="text" id="institution" name="institution" placeholder="University/College name">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="studentNumber">Student Number</label>
+                            <input type="text" id="studentNumber" name="studentNumber" placeholder="Your student number">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="course">Course/Program</label>
+                            <input type="text" id="course" name="course" placeholder="Your field of study">
+                        </div>
+                    </div>
+                    
+                    <!-- For Landlords Only -->
+                    <div class="form-section" id="landlordSection" style="display: none;">
+                        <h3>Landlord Information</h3>
+                        
+                        <div class="form-group">
+                            <label for="company">Company Name (Optional)</label>
+                            <input type="text" id="company" name="company" placeholder="Your company name">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="idNumber" class="required-field">ID Number</label>
+                            <input type="text" id="idNumber" name="idNumber" placeholder="For verification purposes">
+                        </div>
+                    </div>
+                    
+                    <!-- Preferences Section -->
+                    <div class="form-section">
+                        <h3>Communication Preferences</h3>
+                        
+                        <div class="form-group">
+                            <label style="display: flex; align-items: center; gap: var(--space-sm); cursor: pointer;">
+                                <input type="checkbox" id="emailNotifications" name="emailNotifications" checked>
+                                <span>Receive email notifications</span>
+                            </label>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label style="display: flex; align-items: center; gap: var(--space-sm); cursor: pointer;">
+                                <input type="checkbox" id="smsNotifications" name="smsNotifications">
+                                <span>Receive SMS notifications</span>
+                            </label>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label style="display: flex; align-items: center; gap: var(--space-sm); cursor: pointer;">
+                                <input type="checkbox" id="marketingEmails" name="marketingEmails">
+                                <span>Receive promotional offers and updates</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn-primary">Update Profile</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <p>&copy; 2025 UniStay. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/js/config.js"></script>
+    <script src="assets/js/profile.js"></script>
+</body>
+</html>

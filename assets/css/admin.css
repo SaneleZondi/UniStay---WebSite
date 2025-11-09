@@ -1,0 +1,215 @@
+/* assets/css/admin-login.css - Clean Admin Login Styles */
+:root {
+    --admin-primary: #1a237e;
+    --admin-primary-light: #303f9f;
+    --admin-white: #ffffff;
+    --admin-light: #f8f9fa;
+    --admin-border: #e0e0e0;
+    --admin-text: #333333;
+    --admin-text-light: #666666;
+    --admin-error: #e74c3c;
+    --admin-success: #27ae60;
+    
+    --border-radius-md: 8px;
+    --border-radius-lg: 12px;
+    --transition-fast: 0.2s ease;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #1a237e 0%, #303f9f 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.login-container {
+    width: 100%;
+    max-width: 400px;
+}
+
+.login-form {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--border-radius-lg);
+    padding: 40px 30px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    width: 100%;
+}
+
+.form-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.form-header h1 {
+    color: var(--admin-primary);
+    margin: 0 0 8px 0;
+    font-size: 1.8rem;
+    font-weight: 700;
+}
+
+.form-header p {
+    color: var(--admin-text-light);
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+.form-header i {
+    font-size: 2rem;
+    color: var(--admin-primary);
+    margin-bottom: 10px;
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-field {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-field i {
+    position: absolute;
+    left: 15px;
+    color: var(--admin-text-light);
+    font-size: 1rem;
+}
+
+.input-field input {
+    width: 100%;
+    padding: 15px 15px 15px 45px;
+    border: 1px solid var(--admin-border);
+    border-radius: var(--border-radius-md);
+    background: var(--admin-white);
+    color: var(--admin-text);
+    font-size: 1rem;
+    transition: all var(--transition-fast);
+}
+
+.input-field input:focus {
+    outline: none;
+    border-color: var(--admin-primary);
+    box-shadow: 0 0 0 3px rgba(26, 35, 126, 0.1);
+}
+
+.input-field input::placeholder {
+    color: var(--admin-text-light);
+}
+
+.login-button {
+    width: 100%;
+    padding: 15px;
+    background: var(--admin-primary);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius-md);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.login-button:hover {
+    background: var(--admin-primary-light);
+    transform: translateY(-1px);
+}
+
+.login-button:active {
+    transform: translateY(0);
+}
+
+.login-button:disabled {
+    background: var(--admin-text-light);
+    cursor: not-allowed;
+    transform: none;
+}
+
+.form-footer {
+    text-align: center;
+    margin-top: 25px;
+    color: var(--admin-text-light);
+    font-size: 0.9rem;
+}
+
+.form-footer a {
+    color: var(--admin-primary);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.form-footer a:hover {
+    text-decoration: underline;
+}
+
+.error-message {
+    background: var(--admin-error);
+    color: white;
+    padding: 12px 15px;
+    border-radius: var(--border-radius-md);
+    margin-bottom: 20px;
+    text-align: center;
+    display: none;
+    font-size: 0.9rem;
+}
+
+.success-message {
+    background: var(--admin-success);
+    color: white;
+    padding: 12px 15px;
+    border-radius: var(--border-radius-md);
+    margin-bottom: 20px;
+    text-align: center;
+    display: none;
+    font-size: 0.9rem;
+}
+
+/* Loading Spinner */
+.loading-spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    body {
+        padding: 15px;
+    }
+    
+    .login-form {
+        padding: 30px 20px;
+    }
+    
+    .form-header h1 {
+        font-size: 1.5rem;
+    }
+    
+    .input-field input {
+        padding: 12px 12px 12px 40px;
+    }
+}

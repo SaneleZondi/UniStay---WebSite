@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Available Properties – UniStay</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        /* Properties Page Specific Styles */
+        .page-header {
+            background: linear-gradient(135deg, var(--primary), var(--accent-green));
+            color: var(--white);
+            padding: var(--space-xl) 0;
+            text-align: center;
+            margin-bottom: var(--space-xl);
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: var(--space-sm);
+        }
+
+        .page-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .search-section {
+            background: var(--white);
+            padding: var(--space-lg);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            margin-bottom: var(--space-lg);
+        }
+
+        .search-bar {
+            display: flex;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-md);
+            flex-wrap: wrap;
+        }
+
+        .search-bar input {
+            flex: 1;
+            min-width: 250px;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--gray-light);
+            border-radius: var(--radius-md);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .search-bar input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(26, 35, 126, 0.1);
+        }
+
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-md);
+            margin-top: var(--space-md);
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-label {
+            margin-bottom: var(--space-xs);
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 0.9rem;
+        }
+
+        .filter-control {
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--gray-light);
+            border-radius: var(--radius-md);
+            font-size: 1rem;
+            transition: var(--transition);
+            background: var(--white);
+        }
+
+        .filter-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(26, 35, 126, 0.1);
+        }
+
+        .filter-active {
+            border-color: var(--primary);
+            background-color: #e3f2fd;
+            box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
+        }
+
+        .search-active {
+            border-color: var(--primary);
+            box-shadow: 0 0 8px rgba(52, 152, 219, 0.5);
+            background-color: #f8fcff;
+        }
+
+        .results-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-lg);
+            padding: var(--space-md);
+            background: var(--light);
+            border-radius: var(--radius-md);
+            flex-wrap: wrap;
+            gap: var(--space-sm);
+        }
+
+        .results-count {
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .filter-tags {
+            display: flex;
+            gap: var(--space-sm);
+            flex-wrap: wrap;
+        }
+
+        .filter-tag {
+            background: var(--primary);
+            color: var(--white);
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+        }
+
+        .filter-tag button {
+            background: none;
+            border: none;
+            color: var(--white);
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 0;
+        }
+
+        .property-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: var(--space-lg);
+            margin: var(--space-lg) 0;
+        }
+
+        .property-card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .property-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .property-image {
+            position: relative;
+            height: 200px;
+            overflow: hidden;
+        }
+
+        .property-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .property-card:hover .property-image img {
+            transform: scale(1.05);
+        }
+
+        .property-status {
+            position: absolute;
+            top: var(--space-sm);
+            right: var(--space-sm);
+            background: rgba(0, 0, 0, 0.8);
+            color: var(--white);
+            padding: 0.5rem 1rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .property-rating-badge {
+            position: absolute;
+            top: var(--space-sm);
+            left: var(--space-sm);
+            background: var(--accent-green);
+            color: var(--white);
+            padding: 0.5rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .property-content {
+            padding: var(--space-lg);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .property-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: var(--space-xs);
+            color: var(--dark);
+        }
+
+        .property-location {
+            color: var(--gray-dark);
+            margin-bottom: var(--space-sm);
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+        }
+
+        .property-rating {
+            margin-bottom: var(--space-sm);
+        }
+
+        .stars {
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .rating-text {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        .no-reviews {
+            color: var(--gray);
+            font-style: italic;
+        }
+
+        .room-breakdown {
+            display: flex;
+            gap: var(--space-xs);
+            flex-wrap: wrap;
+            margin-bottom: var(--space-sm);
+        }
+
+        .room-type-tag {
+            background: var(--light);
+            color: var(--dark);
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .property-actions {
+            margin-top: auto;
+        }
+
+        .property-actions .btn {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: var(--space-md);
+            margin: var(--space-xl) 0;
+            padding: var(--space-md);
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+        }
+
+        .pagination button {
+            padding: 0.75rem 1.5rem;
+            border: 2px solid var(--primary);
+            background: var(--white);
+            color: var(--primary);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .pagination button:hover:not(:disabled) {
+            background: var(--primary);
+            color: var(--white);
+            transform: translateY(-1px);
+        }
+
+        .pagination button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .page-info {
+            color: var(--dark);
+            font-weight: 600;
+        }
+
+        .loading {
+            text-align: center;
+            padding: var(--space-xl);
+            color: var(--gray);
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+        }
+
+        .error-message {
+            background: #ffe6e6;
+            color: #d63031;
+            padding: var(--space-lg);
+            border-radius: var(--radius-lg);
+            margin: var(--space-lg) 0;
+            text-align: center;
+            border-left: 4px solid var(--error);
+        }
+
+        @media (max-width: 768px) {
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .search-bar {
+                flex-direction: column;
+            }
+
+            .search-bar input {
+                min-width: 100%;
+            }
+
+            .filters-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .property-grid {
+                grid-template-columns: 1fr;
+                gap: var(--space-md);
+            }
+
+            .results-info {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .pagination {
+                flex-direction: column;
+                gap: var(--space-sm);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-header {
+                padding: var(--space-lg) 0;
+            }
+
+            .search-section {
+                padding: var(--space-md);
+            }
+
+            .property-content {
+                padding: var(--space-md);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">UniStay</a>
+                <nav class="nav">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="properties.html" class="nav-link active">Properties</a>
+                    <a href="login.html" id="loginNav" class="nav-link">Login</a>
+                    <a href="tenant-dashboard.html" id="tenantDashboardNav" class="nav-link" style="display: none;">Dashboard</a>
+                    <a href="landlord-dashboard.html" id="landlordDashboardNav" class="nav-link" style="display: none;">Landlord Dashboard</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="main">
+        <!-- Page Header -->
+        <section class="page-header">
+            <div class="container">
+                <h1 class="page-title">Available Properties</h1>
+                <p class="page-subtitle">Find your perfect student accommodation</p>
+            </div>
+        </section>
+
+        <div class="container">
+            <!-- Search and Filters -->
+            <section class="search-section">
+                <div class="search-bar">
+                    <input type="text" id="searchInput" placeholder="Search by city, title, or description..." 
+                           onkeypress="if(event.key === 'Enter') searchProperties()" />
+                    <button class="btn btn-primary" onclick="searchProperties()">Search</button>
+                    <button class="btn btn-secondary" onclick="clearFilters()">Clear Filters</button>
+                </div>
+
+                <div class="filters-grid">
+                    <div class="filter-group">
+                        <label class="filter-label" for="cityFilter">City</label>
+                        <input type="text" id="cityFilter" class="filter-control" placeholder="Filter by city">
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label class="filter-label" for="minPriceFilter">Min Price (R)</label>
+                        <input type="number" id="minPriceFilter" class="filter-control" placeholder="Min price" min="0">
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label class="filter-label" for="maxPriceFilter">Max Price (R)</label>
+                        <input type="number" id="maxPriceFilter" class="filter-control" placeholder="Max price" min="0">
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label class="filter-label" for="roomTypeFilter">Room Type</label>
+                        <select id="roomTypeFilter" class="filter-control">
+                            <option value="">Any Room Type</option>
+                            <option value="single">Single Room</option>
+                            <option value="double">Double Room</option>
+                            <option value="shared">Shared Room</option>
+                            <option value="studio">Studio</option>
+                            <option value="master">Master Suite</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label class="filter-label" for="bedroomsFilter">Bedrooms</label>
+                        <select id="bedroomsFilter" class="filter-control">
+                            <option value="">Any</option>
+                            <option value="1">1 Bedroom</option>
+                            <option value="2">2 Bedrooms</option>
+                            <option value="3">3+ Bedrooms</option>
+                        </select>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Results Info -->
+            <div class="results-info">
+                <div class="results-count" id="searchResults">Loading properties...</div>
+                <div class="filter-tags" id="activeFilters">
+                    <!-- Active filter tags will appear here -->
+                </div>
+            </div>
+
+            <!-- Properties Grid -->
+            <div class="property-grid" id="propertyGrid">
+                <div class="loading">
+                    <div class="loading-spinner">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                    <p>Loading properties...</p>
+                </div>
+            </div>
+
+            <!-- Pagination -->
+            <div class="pagination" id="pagination" style="display: none;">
+                <button id="prevPage" onclick="changePage(-1)">Previous</button>
+                <span class="page-info" id="pageInfo">Page 1 of 1</span>
+                <button id="nextPage" onclick="changePage(1)">Next</button>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <p>&copy; 2025 UniStay. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/js/config.js"></script>
+    <script src="assets/js/properties.js"></script>
+    <script src="assets/js/navigation.js"></script>
+</body>
+</html>

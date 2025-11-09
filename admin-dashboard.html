@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - UniStay</title>
+    <link rel="stylesheet" href="assets/css/admin-dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <div class="admin-sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-cogs"></i> UniStay Admin</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="#" class="nav-item active" data-tab="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a href="#" class="nav-item" data-tab="users"><i class="fas fa-users"></i> Users</a></li>
+                    <li><a href="#" class="nav-item" data-tab="properties"><i class="fas fa-building"></i> Properties</a></li>
+                    <li><a href="#" class="nav-item" data-tab="bookings"><i class="fas fa-calendar-check"></i> Bookings</a></li>
+                    <li><a href="#" class="nav-item" data-tab="payments"><i class="fas fa-credit-card"></i> Payments</a></li>
+                    <li><a href="#" class="nav-item" data-tab="reviews"><i class="fas fa-star"></i> Reviews</a></li>
+                    <li><a href="#" class="nav-item" data-tab="analytics"><i class="fas fa-chart-line"></i> Analytics</a></li>
+                    <li><a href="#" class="nav-item" data-tab="settings"><i class="fas fa-cog"></i> Settings</a></li>
+                </ul>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="admin-main">
+            <!-- Header -->
+            <header class="admin-header">
+                <div class="header-left">
+                    <button class="sidebar-toggle"><i class="fas fa-bars"></i></button>
+                    <h1>Admin Dashboard</h1>
+                </div>
+                <div class="header-right">
+                    <button id="themeToggle" class="btn-icon"><i class="fas fa-moon"></i></button>
+                    <div class="user-menu" id="userMenu">
+                        <div class="user-avatar" id="userAvatar">A</div>
+                        <span id="username">Admin</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard Content -->
+            <main class="admin-content">
+                <!-- Dashboard Tab -->
+                <div id="dashboard" class="tab-content active">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon users">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="totalUsers">0</h3>
+                                <p>Total Users</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon properties">
+                                <i class="fas fa-building"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="totalProperties">0</h3>
+                                <p>Properties</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon bookings">
+                                <i class="fas fa-calendar-check"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="activeBookings">0</h3>
+                                <p>Active Bookings</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon revenue">
+                                <i class="fas fa-money-bill-wave"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="totalRevenue">R0</h3>
+                                <p>Total Revenue</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="charts-grid">
+                        <div class="chart-card">
+                            <h3>Analytics Overview</h3>
+                            <canvas id="analyticsChart"></canvas>
+                        </div>
+                        <div class="chart-card">
+                            <h3>User Distribution</h3>
+                            <canvas id="userDistributionChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="recent-activity">
+                        <h3>Recent Activity</h3>
+                        <div class="activity-table">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>User</th>
+                                        <th>Action</th>
+                                        <th>Description</th>
+                                        <th>Time</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recentActivityTable">
+                                    <!-- Activity data will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Users Tab -->
+                <div id="users" class="tab-content">
+                    <div class="tab-header">
+                        <h2>User Management</h2>
+                        <div class="tab-actions">
+                            <input type="text" id="userSearch" placeholder="Search users...">
+                            <select id="userRoleFilter">
+                                <option value="">All Roles</option>
+                                <option value="tenant">Tenants</option>
+                                <option value="landlord">Landlords</option>
+                                <option value="admin">Admins</option>
+                            </select>
+                            <select id="userStatusFilter">
+                                <option value="">All Status</option>
+                                <option value="verified">Verified</option>
+                                <option value="unverified">Unverified</option>
+                                <option value="locked">Locked</option>
+                            </select>
+                            <button id="exportUsers" class="btn-secondary">Export CSV</button>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>User</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                    <th>Status</th>
+                                    <th>Joined</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersTable">
+                                <!-- Users data will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Properties Tab -->
+                <div id="properties" class="tab-content">
+                    <div class="tab-header">
+                        <h2>Property Management</h2>
+                        <div class="tab-actions">
+                            <input type="text" id="propertySearch" placeholder="Search properties...">
+                            <select id="propertyStatusFilter">
+                                <option value="">All Status</option>
+                                <option value="available">Available</option>
+                                <option value="booked">Booked</option>
+                                <option value="pending">Pending</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Property</th>
+                                    <th>Landlord</th>
+                                    <th>Location</th>
+                                    <th>Price</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="propertiesTable">
+                                <!-- Properties data will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Bookings Tab -->
+                <div id="bookings" class="tab-content">
+                    <div class="tab-header">
+                        <h2>Booking Management</h2>
+                        <div class="tab-actions">
+                            <input type="text" id="bookingSearch" placeholder="Search bookings...">
+                            <select id="bookingStatusFilter">
+                                <option value="">All Status</option>
+                                <option value="pending">Pending</option>
+                                <option value="approved">Approved</option>
+                                <option value="completed">Completed</option>
+                                <option value="cancelled">Cancelled</option>
+                            </select>
+                            <button id="exportBookings" class="btn-secondary">Export CSV</button>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Property</th>
+                                    <th>Tenant</th>
+                                    <th>Landlord</th>
+                                    <th>Dates</th>
+                                    <th>Total</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bookingsTable">
+                                <!-- Bookings data will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Payments Tab -->
+                <div id="payments" class="tab-content">
+                    <div class="tab-header">
+                        <h2>Payment Management</h2>
+                        <div class="payment-stats">
+                            <div class="stat-item">
+                                <span>Total Payments:</span>
+                                <strong id="totalPaymentsCount">0</strong>
+                            </div>
+                            <div class="stat-item">
+                                <span>Total Amount:</span>
+                                <strong id="totalPaymentsAmount">R0</strong>
+                            </div>
+                            <div class="stat-item">
+                                <span>Completed:</span>
+                                <strong id="completedPaymentsAmount">R0</strong>
+                            </div>
+                        </div>
+                        <div class="tab-actions">
+                            <input type="text" id="paymentSearch" placeholder="Search payments...">
+                            <select id="paymentStatusFilter">
+                                <option value="">All Status</option>
+                                <option value="pending">Pending</option>
+                                <option value="completed">Completed</option>
+                                <option value="failed">Failed</option>
+                            </select>
+                            <select id="paymentTypeFilter">
+                                <option value="">All Types</option>
+                                <option value="deposit">Deposit</option>
+                                <option value="full">Full Payment</option>
+                                <option value="balance">Balance</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Property</th>
+                                    <th>Payer</th>
+                                    <th>Amount</th>
+                                    <th>Type</th>
+                                    <th>Method</th>
+                                    <th>Status</th>
+                                    <th>Transaction ID</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="paymentsTable">
+                                <!-- Payments data will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Reviews Tab -->
+                <div id="reviews" class="tab-content">
+                    <div class="tab-header">
+                        <h2>Review Management</h2>
+                        <div class="tab-actions">
+                            <input type="text" id="reviewSearch" placeholder="Search reviews...">
+                            <select id="reviewStatusFilter">
+                                <option value="">All Status</option>
+                                <option value="approved">Approved</option>
+                                <option value="pending">Pending</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Property</th>
+                                    <th>Tenant</th>
+                                    <th>Rating</th>
+                                    <th>Comment</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="reviewsTable">
+                                <!-- Reviews data will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Analytics Tab -->
+                <div id="analytics" class="tab-content">
+                    <div class="tab-header">
+                        <h2>Advanced Analytics</h2>
+                    </div>
+                    <div class="analytics-grid">
+                        <div class="analytics-card">
+                            <h3>Revenue Trends</h3>
+                            <canvas id="revenueChart"></canvas>
+                        </div>
+                        <div class="analytics-card">
+                            <h3>Booking Status Distribution</h3>
+                            <canvas id="bookingStatusChart"></canvas>
+                        </div>
+                        <div class="analytics-card">
+                            <h3>User Growth</h3>
+                            <canvas id="userGrowthChart"></canvas>
+                        </div>
+                        <div class="analytics-card">
+                            <h3>Property Performance</h3>
+                            <canvas id="propertyPerformanceChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Settings Tab -->
+                <!-- In your admin-dashboard.html settings tab -->
+<div id="settings" class="tab-content">
+    <div class="tab-header">
+        <h2>System Settings</h2>
+    </div>
+    
+    <div class="settings-grid">
+        <div class="settings-card">
+            <h3>Maintenance Mode</h3>
+            <form id="maintenanceSettings">
+                <div class="form-group">
+                    <label class="switch-label">
+                        <span>Enable Maintenance Mode</span>
+                        <label class="switch">
+                            <input type="checkbox" id="maintenanceMode" name="site_maintenance">
+                            <span class="slider"></span>
+                        </label>
+                    </label>
+                    <small>When enabled, users will see a maintenance page instead of login/register.</small>
+                </div>
+                
+                <div class="form-group">
+                    <label>Maintenance Message</label>
+                    <textarea id="maintenanceMessage" name="maintenance_message" rows="4" 
+                              placeholder="Custom message to display during maintenance..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>Expected Completion Time</label>
+                    <input type="datetime-local" id="maintenanceTime" name="maintenance_expected_time">
+                </div>
+                
+                <button type="submit" class="btn-primary">Save Maintenance Settings</button>
+            </form>
+        </div>
+        
+        <div class="settings-card">
+            <h3>General Settings</h3>
+            <form id="generalSettings">
+                <div class="form-group">
+                    <label class="switch-label">
+                        <span>Allow User Registration</span>
+                        <label class="switch">
+                            <input type="checkbox" id="registrationEnabled" name="registration_enabled" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </label>
+                </div>
+                
+                <div class="form-group">
+                    <label>Max Properties per Landlord</label>
+                    <input type="number" id="maxProperties" name="max_properties_per_landlord" value="5" min="1">
+                </div>
+                
+                <button type="submit" class="btn-primary">Save General Settings</button>
+            </form>
+        </div>
+    </div>
+</div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="assets/js/config.js"></script>
+    <script src="assets/js/admin-dashboard.js"></script>
+</body>
+</html>

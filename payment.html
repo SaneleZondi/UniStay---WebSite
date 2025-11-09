@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment - UniStay</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        .payment-container {
+            max-width: 600px;
+            margin: 2rem auto;
+            padding: var(--space-xl);
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .payment-methods {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: var(--space-md);
+            margin: var(--space-lg) 0;
+        }
+
+        .payment-method {
+            border: 2px solid var(--gray-light);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            background: var(--white);
+        }
+
+        .payment-method:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .payment-method.selected {
+            border-color: var(--primary);
+            background: var(--light);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .payment-form {
+            display: none;
+            margin-top: var(--space-lg);
+        }
+
+        .form-group {
+            margin-bottom: var(--space-md);
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: var(--space-xs);
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid var(--gray-light);
+            border-radius: var(--radius-md);
+            font-size: 16px;
+            transition: var(--transition);
+            background: var(--white);
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(26, 35, 126, 0.1);
+        }
+
+        .btn-pay {
+            width: 100%;
+            padding: 15px 25px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: var(--white);
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: var(--space-lg);
+            transition: var(--transition);
+        }
+
+        .btn-pay:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-pay:disabled {
+            background: var(--gray);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid transparent;
+            border-top: 2px solid currentColor;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            background: #fee;
+            border: 1px solid #fcc;
+            color: var(--error);
+            padding: var(--space-md);
+            border-radius: var(--radius-md);
+            margin: var(--space-md) 0;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: var(--space-md);
+            margin-top: var(--space-lg);
+        }
+
+        .btn-primary, .btn-secondary {
+            padding: 12px 20px;
+            border: none;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: var(--white);
+        }
+
+        .btn-secondary {
+            background: var(--gray-dark);
+            color: var(--white);
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-1px);
+        }
+
+        .booking-summary-card {
+            background: var(--light);
+            padding: var(--space-lg);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--space-lg);
+            border-left: 4px solid var(--primary);
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: var(--space-sm);
+            padding-bottom: var(--space-xs);
+            border-bottom: 1px solid var(--gray-light);
+        }
+
+        .summary-item.highlight {
+            border-bottom: 2px solid var(--accent-green);
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+
+        .payment-instructions {
+            background: var(--light);
+            padding: var(--space-lg);
+            border-radius: var(--radius-md);
+            border-left: 4px solid var(--accent-green);
+        }
+
+        @media (max-width: 768px) {
+            .payment-container {
+                margin: var(--space-md);
+                padding: var(--space-lg);
+            }
+
+            .payment-methods {
+                grid-template-columns: 1fr;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">UniStay</a>
+                <nav class="nav">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="properties.html" class="nav-link">Properties</a>
+                    <a href="dashboard.html" class="nav-link" id="dashboardLink" style="display: none;">Dashboard</a>
+                    <a href="login.html" class="nav-link" id="loginLink">Login</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- EXISTING CONTENT STRUCTURE - NO CHANGES -->
+        <div class="payment-container">
+            <h1>Payment</h1>
+            <div id="paymentInfo">
+                <p>Loading payment information...</p>
+            </div>
+            
+            <div class="payment-methods">
+                <div class="payment-method" data-method="card" onclick="selectPaymentMethod('card')">
+                    <h3>💳 Credit Card</h3>
+                    <p>Pay with card</p>
+                </div>
+                <div class="payment-method" data-method="bank" onclick="selectPaymentMethod('bank')">
+                    <h3>🏦 Bank Transfer</h3>
+                    <p>EFT payment</p>
+                </div>
+            </div>
+            
+            <form id="paymentForm" style="display: none;">
+                <div id="cardForm" class="payment-form">
+                    <div class="form-group">
+                        <label>Card Number</label>
+                        <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19">
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label>Expiry Date</label>
+                            <input type="text" id="expiryDate" placeholder="MM/YY" maxlength="5">
+                        </div>
+                        <div class="form-group">
+                            <label>CVV</label>
+                            <input type="text" id="cvv" placeholder="123" maxlength="3">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Cardholder Name</label>
+                        <input type="text" id="cardHolder" placeholder="John Doe">
+                    </div>
+                </div>
+                
+                <div id="bankForm" class="payment-form">
+                    <div class="payment-instructions">
+                        <h3>Bank Transfer Instructions</h3>
+                        <p><strong>Bank:</strong> UniStay Bank</p>
+                        <p><strong>Account Number:</strong> 123456789</p>
+                        <p><strong>Branch Code:</strong> 123456</p>
+                        <p><strong>Reference:</strong> <span id="bankReference"></span></p>
+                        <p>Please use the reference above when making payment.</p>
+                    </div>
+                </div>
+                
+                <button type="submit" id="payBtn" class="btn-pay" disabled>
+                    Pay Deposit - R<span id="payAmount">0</span>
+                </button>
+            </form>
+
+            <div class="action-buttons">
+                <a href="properties.html" class="btn-secondary">Cancel</a>
+            </div>
+        </div>
+    </main>
+
+    <script src="assets/js/config.js"></script>
+    <script>
+        // Global variables
+        let currentBooking = null;
+        let selectedMethod = null;
+
+        // Initialize payment page
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('💰 Payment page initialized');
+            
+            // Debug URL parameters
+            console.log('🔗 Current URL:', window.location.href);
+            console.log('🔍 URL Search:', window.location.search);
+            
+            const urlParams = new URLSearchParams(window.location.search);
+            const bookingIdFromUrl = urlParams.get('booking_id');
+            console.log('📋 Booking ID from URL:', bookingIdFromUrl);
+            
+            // Check authentication first
+            const loggedInUser = sessionStorage.getItem('LoggedInUser');
+            if (!loggedInUser) {
+                showNotification('Please login to make payment.', 'error');
+                setTimeout(() => {
+                    window.location.href = 'login.html?returnUrl=' + encodeURIComponent(window.location.href);
+                }, 2000);
+                return;
+            }
+            
+            loadBookingData();
+            setupEventListeners();
+            setupLogout();
+        });
+
+        // Load booking data from URL parameter
+        async function loadBookingData() {
+            // Get booking ID from URL - multiple methods for reliability
+            const urlParams = new URLSearchParams(window.location.search);
+            let bookingId = urlParams.get('booking_id');
+            
+            // Fallback: check sessionStorage if URL parameter is missing
+            if (!bookingId) {
+                bookingId = sessionStorage.getItem('lastBookingId');
+                console.log('🔄 Using booking ID from sessionStorage:', bookingId);
+            }
+            
+            console.log('🔍 Final booking ID to use:', bookingId);
+            
+            if (!bookingId) {
+                showError('No booking specified for payment. Please start the booking process again.');
+                return;
+            }
+
+            try {
+                console.log('📋 Loading booking data for ID:', bookingId);
+                
+                const response = await apiRequest(`bookings/read.php?id=${bookingId}`);
+                
+                if (!response.success) {
+                    throw new Error(response.error || 'Failed to load booking data');
+                }
+
+                currentBooking = response.booking;
+                console.log('✅ Booking data loaded:', currentBooking);
+                displayBookingSummary();
+                
+            } catch (err) {
+                console.error('❌ Error loading booking:', err);
+                showError('Error loading booking details: ' + err.message);
+            }
+        }
+
+        function displayBookingSummary() {
+            const paymentInfo = document.getElementById('paymentInfo');
+            if (!paymentInfo || !currentBooking) return;
+
+            // Use room_price instead of property price
+            const monthlyRate = parseFloat(currentBooking.room_price) || 
+                               parseFloat(currentBooking.monthly_rate) || 0;
+            
+            const depositAmount = parseFloat(currentBooking.deposit_amount) || 
+                                 (monthlyRate * parseInt(currentBooking.duration) * 0.3);
+
+            paymentInfo.innerHTML = `
+                <div class="booking-summary-card">
+                    <h3>Booking Summary</h3>
+                    <div class="summary-item">
+                        <span>Property:</span>
+                        <span>${escapeHtml(currentBooking.property_title)}</span>
+                    </div>
+                    ${currentBooking.room_number ? `
+                    <div class="summary-item">
+                        <span>Room:</span>
+                        <span>${currentBooking.room_number} (${currentBooking.room_type})</span>
+                    </div>
+                    ` : ''}
+                    <div class="summary-item">
+                        <span>Check-in:</span>
+                        <span>${formatDate(currentBooking.check_in)}</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Check-out:</span>
+                        <span>${formatDate(currentBooking.check_out)}</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Monthly Rate:</span>
+                        <span>R${monthlyRate.toFixed(2)}</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Duration:</span>
+                        <span>${currentBooking.duration} month${currentBooking.duration != 1 ? 's' : ''}</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Total Booking Amount:</span>
+                        <span>R${parseFloat(currentBooking.total_price).toFixed(2)}</span>
+                    </div>
+                    <div class="summary-item highlight">
+                        <span><strong>Deposit Due:</strong></span>
+                        <span><strong>R${depositAmount.toFixed(2)}</strong></span>
+                    </div>
+                </div>
+            `;
+
+            // Update payment amount display
+            const amountElement = document.getElementById('payAmount');
+            if (amountElement) {
+                amountElement.textContent = depositAmount.toFixed(2);
+            }
+        }
+
+        function setupEventListeners() {
+            // Card number formatting
+            const cardNumberInput = document.getElementById('cardNumber');
+            if (cardNumberInput) {
+                cardNumberInput.addEventListener('input', formatCardNumber);
+            }
+
+            // Expiry date formatting
+            const expiryInput = document.getElementById('expiryDate');
+            if (expiryInput) {
+                expiryInput.addEventListener('input', formatExpiryDate);
+            }
+
+            // CVV validation
+            const cvvInput = document.getElementById('cvv');
+            if (cvvInput) {
+                cvvInput.addEventListener('input', validateCVV);
+            }
+        }
+
+        function setupLogout() {
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if (confirm('Are you sure you want to log out?')) {
+                        sessionStorage.clear();
+                        window.location.href = 'login.html';
+                    }
+                });
+            }
+        }
+
+        function selectPaymentMethod(method) {
+            selectedMethod = method;
+            
+            // Update UI
+            document.querySelectorAll('.payment-method').forEach(el => {
+                el.classList.remove('selected');
+            });
+            document.querySelector(`[data-method="${method}"]`).classList.add('selected');
+            
+            // Show appropriate form
+            document.getElementById('paymentForm').style.display = 'block';
+            document.getElementById('cardForm').style.display = method === 'card' ? 'block' : 'none';
+            document.getElementById('bankForm').style.display = method === 'bank' ? 'block' : 'none';
+            
+            // Update button text
+            const payBtn = document.getElementById('payBtn');
+            payBtn.disabled = false;
+            
+            if (method === 'bank') {
+                payBtn.innerHTML = 'Confirm Bank Transfer';
+                // Set bank reference
+                document.getElementById('bankReference').textContent = 'UNISTAY' + currentBooking.id;
+            } else {
+                const depositAmount = parseFloat(currentBooking.deposit_amount) || (parseFloat(currentBooking.total_price) * 0.3);
+                payBtn.innerHTML = `Pay Deposit - R<span id="payAmount">${depositAmount.toFixed(2)}</span>`;
+            }
+        }
+
+        function formatCardNumber(e) {
+            let value = e.target.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+            let formattedValue = '';
+            
+            for (let i = 0; i < value.length; i++) {
+                if (i > 0 && i % 4 === 0) {
+                    formattedValue += ' ';
+                }
+                formattedValue += value[i];
+            }
+            
+            e.target.value = formattedValue;
+        }
+
+        function formatExpiryDate(e) {
+            let value = e.target.value.replace(/\//g, '').replace(/[^0-9]/gi, '');
+            if (value.length >= 2) {
+                value = value.substring(0, 2) + '/' + value.substring(2, 4);
+            }
+            e.target.value = value;
+        }
+
+        function validateCVV(e) {
+            let value = e.target.value.replace(/[^0-9]/g, '');
+            if (value.length > 3) {
+                value = value.substring(0, 3);
+            }
+            e.target.value = value;
+        }
+		
+		function getSessionToken() {
+    return sessionStorage.getItem('session_token') || document.cookie.match(/session_token=([^;]+)/)?.[1];
+}
+
+        // Payment form submission
+        document.getElementById('paymentForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            if (!currentBooking) {
+                showNotification('Booking information not loaded', 'error');
+                return;
+            }
+            
+            const payBtn = document.getElementById('payBtn');
+            const originalText = payBtn.innerHTML;
+            payBtn.disabled = true;
+            payBtn.innerHTML = '<span class="spinner"></span> Processing...';
+            
+            try {
+                const depositAmount = parseFloat(currentBooking.deposit_amount) || (parseFloat(currentBooking.total_price) * 0.3);
+                
+                const paymentData = {
+                    booking_id: currentBooking.id,
+                    payment_method: selectedMethod,
+                    amount: depositAmount
+                };
+                
+                console.log('🔐 Session Storage Debug:', {
+                    loggedInUser: sessionStorage.getItem('LoggedInUser'),
+                    userRole: sessionStorage.getItem('UserRole'),
+                    userId: sessionStorage.getItem('UserId'),
+                    currentBooking: currentBooking
+                });
+
+                // Add user identification for authorization
+                const loggedInUser = sessionStorage.getItem('LoggedInUser');
+                const userRole = sessionStorage.getItem('UserRole');
+                const userId = sessionStorage.getItem('UserId');
+                
+                // Always send user identification to help PHP session matching
+                if (loggedInUser && userRole && userId) {
+                    paymentData.user_id = userId;
+                    paymentData.user_email = loggedInUser;
+                    paymentData.user_role = userRole;
+                } else {
+                    // Fallback to guest email from booking
+                    paymentData.guest_email = currentBooking.guest_email;
+                }
+                
+                console.log('🔐 Payment authorization data:', paymentData);
+                
+                // Add card details if paying by card
+                if (selectedMethod === 'card') {
+                    const cardNumber = document.getElementById('cardNumber').value.replace(/\s+/g, '');
+                    const expiryDate = document.getElementById('expiryDate').value;
+                    const cvv = document.getElementById('cvv').value;
+                    const cardHolder = document.getElementById('cardHolder').value;
+                    
+                    paymentData.card_number = cardNumber;
+                    paymentData.expiry_date = expiryDate;
+                    paymentData.cvc = cvv;
+                    paymentData.card_holder = cardHolder;
+                }
+                
+                console.log('📦 Payment data:', paymentData);
+                
+                const response = await fetch('http://localhost/UniStay---Website/backend/api/payments/process.php', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${getSessionToken()}` // ADD THIS
+    },
+    credentials: 'include',
+    body: JSON.stringify(paymentData)
+});
+                
+                console.log('📡 Payment response status:', response.status);
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('❌ Payment API error:', errorText);
+                    
+                    // Try to parse error message
+                    let errorMessage = 'Payment failed';
+                    try {
+                        const errorData = JSON.parse(errorText);
+                        errorMessage = errorData.error || errorMessage;
+                    } catch (e) {
+                        errorMessage = errorText;
+                    }
+                    
+                    throw new Error(errorMessage);
+                }
+                
+                const result = await response.json();
+                console.log('💰 Payment result:', result);
+                
+                if (result.success) {
+                    showNotification('Payment successful! Your booking is confirmed.', 'success');
+                    
+                    // Clear stored booking data
+                    sessionStorage.removeItem('lastBookingId');
+                    
+                    // Redirect to receipt or booking details
+                    setTimeout(() => {
+                        if (result.payment_id) {
+                            window.location.href = `receipt.html?payment_id=${result.payment_id}`;
+                        } else {
+                            window.location.href = `tenant-dashboard.html`;
+                        }
+                    }, 2000);
+                    
+                } else {
+                    throw new Error(result.error || 'Payment failed');
+                }
+                
+            } catch (err) {
+                console.error('❌ Payment error:', err);
+                showNotification('Payment failed: ' + err.message, 'error');
+                payBtn.disabled = false;
+                payBtn.innerHTML = originalText;
+            }
+        });
+
+        // Utility functions
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return 'N/A';
+            try {
+                return new Date(dateString).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric'
+                });
+            } catch (e) {
+                return 'Invalid Date';
+            }
+        }
+
+        function showError(message) {
+            const paymentInfo = document.getElementById('paymentInfo');
+            if (paymentInfo) {
+                paymentInfo.innerHTML = `
+                    <div class="error-message">
+                        <h3>Payment Error</h3>
+                        <p>${message}</p>
+                        <div style="margin-top: 1rem;">
+                            <a href="properties.html" class="btn-primary">Browse Properties</a>
+                            <button onclick="location.reload()" class="btn-secondary" style="margin-left: 10px;">Try Again</button>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            // Also disable payment buttons
+            const payBtn = document.getElementById('payBtn');
+            if (payBtn) payBtn.disabled = true;
+            const paymentForm = document.getElementById('paymentForm');
+            if (paymentForm) paymentForm.style.display = 'none';
+        }
+
+        function showNotification(message, type) {
+            let notification = document.getElementById('notification');
+            if (!notification) {
+                notification = document.createElement('div');
+                notification.id = 'notification';
+                notification.style.cssText = 'position: fixed; top: 20px; right: 20px; padding: 15px 20px; border-radius: 5px; color: white; font-weight: bold; z-index: 1000; transition: opacity 0.3s;';
+                document.body.appendChild(notification);
+            }
+            
+            const colors = {
+                success: '#28a745',
+                error: '#dc3545',
+                warning: '#ffc107',
+                info: '#17a2b8'
+            };
+            
+            notification.style.backgroundColor = colors[type] || colors.info;
+            if (type === 'warning') notification.style.color = '#212529';
+            
+            notification.textContent = message;
+            notification.style.opacity = '1';
+            
+            setTimeout(() => notification.style.opacity = '0', 3000);
+        }
+    </script>
+</body>
+</html>

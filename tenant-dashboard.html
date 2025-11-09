@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tenant Dashboard - UniStay</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        /* Tenant Dashboard Specific Styles */
+        .dashboard-hero {
+            background: linear-gradient(135deg, var(--primary), var(--accent-green));
+            color: var(--white);
+            padding: var(--space-xl) 0;
+            margin-bottom: var(--space-xl);
+        }
+
+        .welcome-section {
+            text-align: center;
+            margin-bottom: var(--space-lg);
+            color: var(--white);
+        }
+
+        .welcome-section h1 {
+            font-size: 2.5rem;
+            margin-bottom: var(--space-sm);
+            font-weight: 700;
+            color: var(--white);
+        }
+
+        .welcome-section p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: var(--space-lg);
+            color: var(--white);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-md);
+            margin: var(--space-lg) 0;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            padding: var(--space-lg);
+            border-radius: var(--radius-lg);
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: var(--white);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: var(--space-xs);
+            display: block;
+            color: var(--white);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            color: var(--white);
+        }
+
+        .dashboard-actions {
+            padding: var(--space-xl) 0;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: var(--space-lg);
+            color: var(--dark);
+        }
+
+        .action-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--space-lg);
+            margin: var(--space-lg) 0;
+        }
+
+        .action-card {
+            background: var(--white);
+            padding: var(--space-xl);
+            border-radius: var(--radius-lg);
+            text-align: center;
+            text-decoration: none;
+            color: inherit;
+            transition: var(--transition);
+            box-shadow: var(--shadow-md);
+            border: 2px solid transparent;
+        }
+
+        .action-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary);
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .action-icon {
+            font-size: 3rem;
+            margin-bottom: var(--space-md);
+            color: var(--primary);
+        }
+
+        .action-card h3 {
+            margin-bottom: var(--space-sm);
+            color: var(--dark);
+        }
+
+        .action-card p {
+            color: var(--gray-dark);
+            line-height: 1.5;
+        }
+
+        .bookings-section {
+            padding: var(--space-xl) 0;
+            background: var(--light);
+        }
+
+        .bookings-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-lg);
+            flex-wrap: wrap;
+            gap: var(--space-md);
+        }
+
+        .bookings-grid {
+            display: grid;
+            gap: var(--space-lg);
+        }
+
+        .booking-card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            box-shadow: var(--shadow-md);
+            transition: var(--transition);
+            border-left: 4px solid var(--primary);
+        }
+
+        .booking-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .booking-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: var(--space-md);
+            flex-wrap: wrap;
+            gap: var(--space-sm);
+        }
+
+        .booking-info {
+            flex: 1;
+        }
+
+        .booking-title {
+            font-size: 1.3rem;
+            color: var(--dark);
+            margin: 0;
+        }
+
+        .booking-location {
+            color: var(--gray-dark);
+            margin-top: var(--space-xs);
+            font-size: 0.9rem;
+        }
+
+        .status-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .status-pending { background: #fff3cd; color: #856404; }
+        .status-approved { background: #d4edda; color: #155724; }
+        .status-completed { background: #d1ecf1; color: #0c5460; }
+        .status-cancelled { background: #f8d7da; color: #721c24; }
+
+        .booking-meta {
+            display: flex;
+            gap: var(--space-md);
+            margin: var(--space-sm) 0;
+            flex-wrap: wrap;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+            color: var(--gray-dark);
+            font-size: 0.9rem;
+        }
+
+        .booking-details {
+            background: var(--light);
+            padding: var(--space-md);
+            border-radius: var(--radius-md);
+            margin: var(--space-md) 0;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--gray-light);
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .detail-value {
+            color: var(--gray-dark);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: var(--space-sm);
+            flex-wrap: wrap;
+            margin-top: var(--space-md);
+        }
+
+        .btn-action {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-xs);
+            padding: 0.5rem 0.75rem;
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: inherit;
+            white-space: nowrap;
+        }
+
+        .btn-action:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-view {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: var(--white);
+        }
+
+        .btn-view:hover {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+        }
+
+        .btn-review {
+            background: linear-gradient(135deg, #ffd700, #ffa500);
+            color: #000;
+        }
+
+        .btn-review:hover {
+            background: linear-gradient(135deg, #ffa500, #ff8c00);
+            color: #000;
+        }
+
+        .btn-contact {
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            color: var(--white);
+        }
+
+        .btn-contact:hover {
+            background: linear-gradient(135deg, #8e44ad, #7d3c98);
+        }
+
+        .btn-cancel {
+            background: linear-gradient(135deg, #e67e22, #d35400);
+            color: var(--white);
+        }
+
+        .btn-cancel:hover {
+            background: linear-gradient(135deg, #d35400, #ba4a00);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: var(--space-xl);
+            color: var(--gray);
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+        }
+
+        .empty-icon {
+            font-size: 4rem;
+            margin-bottom: var(--space-md);
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            margin-bottom: var(--space-sm);
+            color: var(--dark);
+        }
+
+        .empty-state p {
+            margin-bottom: var(--space-lg);
+            color: var(--gray-dark);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-md);
+        }
+
+        .modal-content {
+            background: var(--white);
+            padding: var(--space-xl);
+            border-radius: var(--radius-lg);
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+        }
+
+        @media (max-width: 768px) {
+            .welcome-section h1 {
+                font-size: 2rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: var(--space-sm);
+            }
+
+            .bookings-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .booking-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .action-buttons .btn-action {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .booking-meta {
+                flex-direction: column;
+                gap: var(--space-xs);
+            }
+
+            .action-grid {
+                grid-template-columns: 1fr;
+                gap: var(--space-md);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .welcome-section h1 {
+                font-size: 1.8rem;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+            }
+
+            .action-card {
+                padding: var(--space-lg);
+            }
+
+            .booking-card {
+                padding: var(--space-md);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">UniStay</a>
+                <nav class="nav">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="properties.html" class="nav-link">Properties</a>
+                    <a href="messages.html" class="nav-link">Messages</a>
+                    <a href="profile.html" class="nav-link">Profile</a>
+                    <a href="#" class="nav-link" onclick="logout()">Logout</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="main">
+        <!-- Welcome Section -->
+        <section class="dashboard-hero">
+            <div class="container">
+                <div class="welcome-section">
+                    <h1>Welcome back, <span id="userName">Tenant</span>!</h1>
+                    <p>Manage your bookings and find your next stay</p>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-number" id="activeBookingsCount">0</span>
+                        <span class="stat-label">Active Bookings</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number" id="totalBookingsCount">0</span>
+                        <span class="stat-label">Total Bookings</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number" id="completedBookingsCount">0</span>
+                        <span class="stat-label">Completed Stays</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quick Actions -->
+        <section class="dashboard-actions">
+            <div class="container">
+                <h2 class="section-title">Quick Actions</h2>
+                <div class="action-grid">
+                    <a href="properties.html" class="action-card">
+                        <div class="action-icon">🔍</div>
+                        <h3>Find Properties</h3>
+                        <p>Browse available accommodations near your campus</p>
+                    </a>
+                    
+                    <a href="messages.html" class="action-card">
+                        <div class="action-icon">💬</div>
+                        <h3>Messages</h3>
+                        <p>Contact landlords and get quick responses</p>
+                    </a>
+                    
+                    <a href="profile.html" class="action-card">
+                        <div class="action-icon">👤</div>
+                        <h3>My Profile</h3>
+                        <p>Update your personal information</p>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recent Bookings -->
+        <section class="bookings-section">
+            <div class="container">
+                <div class="bookings-header">
+                    <h2 class="section-title" style="margin: 0; text-align: left;">Your Bookings</h2>
+                    <button class="btn btn-primary" onclick="refreshBookings()">
+                        🔄 Refresh
+                    </button>
+                </div>
+                
+                <div class="bookings-container">
+                    <div id="bookingsList" class="bookings-grid">
+                        <div class="loading">
+                            <div class="loading-spinner">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+                            <p>Loading your bookings...</p>
+                        </div>
+                    </div>
+                    
+                    <div id="noBookingsMessage" class="empty-state" style="display: none;">
+                        <div class="empty-icon">📋</div>
+                        <h3>No bookings yet</h3>
+                        <p>Start by exploring available properties near your campus</p>
+                        <a href="properties.html" class="btn btn-primary">Browse Properties</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Review Modal -->
+    <div id="reviewModal" class="modal">
+        <div class="modal-content">
+            <div class="d-flex justify-between align-center mb-3" style="border-bottom: 1px solid var(--gray-light); padding-bottom: var(--space-md);">
+                <h3 style="margin: 0;">Review Your Stay</h3>
+                <button onclick="closeReviewModal()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--gray);">&times;</button>
+            </div>
+            
+            <p class="mb-3"><strong>Property:</strong> <span id="reviewPropertyTitle"></span></p>
+            
+            <form id="reviewForm">
+                <input type="hidden" name="booking_id" id="reviewBookingId">
+                
+                <div class="form-group">
+                    <label class="form-label">Overall Rating *</label>
+                    <div class="d-flex gap-1 mb-1" id="starRating">
+                        <!-- Stars will be populated by JavaScript -->
+                    </div>
+                    <input type="hidden" name="rating" id="ratingValue" required>
+                    <div id="ratingError" class="alert alert-error" style="display: none; margin-top: var(--space-xs);">Please select a rating</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="reviewComment" class="form-label">Your Review *</label>
+                    <textarea name="comment" id="reviewComment" class="form-control" rows="4" 
+                              placeholder="Share your experience with this property and landlord..." 
+                              required minlength="10" maxlength="1000"></textarea>
+                    <div class="form-text">Minimum 10 characters, maximum 1000 characters</div>
+                    <div id="commentError" class="alert alert-error" style="display: none; margin-top: var(--space-xs);">Review must be at least 10 characters long</div>
+                </div>
+                
+                <div class="d-flex justify-end gap-2 mt-3">
+                    <button type="button" onclick="closeReviewModal()" class="btn btn-secondary">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Submit Review</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <p>&copy; 2025 UniStay. All rights reserved. | Student Accommodation Made Easy</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/js/config.js"></script>
+    <script src="assets/js/tenant-dashboard.js"></script>
+</body>
+</html>

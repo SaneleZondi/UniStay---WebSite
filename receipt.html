@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Receipt - UniStay</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <!-- Consistent Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">UniStay</a>
+                <nav class="nav">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="properties.html" class="nav-link">Properties</a>
+                    <a href="tenant-dashboard.html" class="nav-link" id="tenantDashboardLink" style="display: none;">Dashboard</a>
+                    <a href="#" class="nav-link" id="logoutBtn" style="display: none;">Logout</a>
+                    <a href="login.html" class="nav-link" id="loginLink">Login</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="container">
+            <div class="receipt-container">
+                <div class="receipt-header">
+                    <h1>Payment Receipt</h1>
+                    <p class="text-muted" id="receiptNumber">Loading receipt...</p>
+                </div>
+                
+                <div class="card">
+                    <div id="receiptContent">
+                        <div class="loading">
+                            <div class="loading-spinner">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+                            <p>Loading receipt details...</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="receipt-actions">
+                    <button onclick="window.print()" class="btn btn-primary">Print Receipt</button>
+                    <a href="tenant-dashboard.html" class="btn btn-secondary">Back to Dashboard</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <p>&copy; 2025 UniStay. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/js/config.js"></script>
+    <script src="assets/js/navigation.js"></script>
+    <script>
+        // All existing receipt functionality remains exactly the same
+        document.addEventListener('DOMContentLoaded', function() {
+            const loggedInUser = sessionStorage.getItem('LoggedInUser');
+            const userRole = sessionStorage.getItem('UserRole');
+            const userId = sessionStorage.getItem('UserId');
+            
+            if (!loggedInUser) {
+                showNotification('Please login to view receipt.', 'error');
+                setTimeout(() => window.location.href = 'login.html', 2000);
+                return;
+            }
+            
+            const urlParams = new URLSearchParams(window.location.search);
+            const paymentId = urlParams.get('payment_id');
+            
+            if (!paymentId) {
+                showNotification('No payment specified.', 'error');
+                setTimeout(() => window.location.href = 'tenant-dashboard.html', 2000);
+                return;
+            }
+            
+            loadReceiptDetails(paymentId, userId, loggedInUser, userRole);
+        });
+        
+        async function loadReceiptDetails(paymentId, userId, userEmail, userRole) {
+            try {
+                const url = new URL(`http://localhost/UniStay---Website/backend/api/payments/receipts.php`);
+                url.searchParams.append('id', paymentId);
+                
+                if (userId) url.searchParams.append('user_id', userId);
+                if (userEmail) url.searchParams.append('user_email', userEmail);
+                if (userRole) url.searchParams.append('user_role', userRole);
+                
+                const response = await fetch(url, { credentials: 'include' });
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(errorText);
+                }
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    displayReceipt(result.receipt);
+                } else {
+                    throw new Error(result.error || 'Failed to load receipt');
+                }
+                
+            } catch (err) {
+                document.getElementById('receiptContent').innerHTML = `
+                    <div class="alert alert-error">
+                        <h3>Error Loading Receipt</h3>
+                        <p>${err.message}</p>
+                        <div class="action-buttons" style="margin-top: 1rem;">
+                            <button onclick="location.reload()" class="btn btn-primary">Try Again</button>
+                            <a href="tenant-dashboard.html" class="btn btn-secondary">Back to Dashboard</a>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+        
+        function displayReceipt(receipt) {
+            document.getElementById('receiptNumber').textContent = `Receipt #${receipt.receipt_number}`;
+            
+            document.getElementById('receiptContent').innerHTML = `
+                <div class="receipt-details">
+                    <div class="detail-row">
+                        <span><strong>Payment Date:</strong></span>
+                        <span>${formatDateTime(receipt.payment_date)}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span><strong>Transaction ID:</strong></span>
+                        <span>${receipt.transaction_id || 'N/A'}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span><strong>Status:</strong></span>
+                        <span class="badge badge-${receipt.status === 'completed' ? 'success' : receipt.status === 'pending' ? 'warning' : 'danger'}">
+                            ${receipt.status.toUpperCase()}
+                        </span>
+                    </div>
+                    
+                    <div class="section-divider">
+                        <h3>Property Details</h3>
+                        <div class="detail-row">
+                            <span>Property:</span>
+                            <span>${receipt.property.title}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span>Address:</span>
+                            <span>${receipt.property.address}, ${receipt.property.city}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="section-divider">
+                        <h3>Booking Details</h3>
+                        <div class="detail-row">
+                            <span>Check-in:</span>
+                            <span>${formatDate(receipt.booking.check_in)}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span>Check-out:</span>
+                            <span>${formatDate(receipt.booking.check_out)}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span>Guests:</span>
+                            <span>${receipt.booking.guests}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="section-divider">
+                        <h3>Payment Details</h3>
+                        <div class="detail-row">
+                            <span>Amount Paid:</span>
+                            <span>R${parseFloat(receipt.amount).toFixed(2)}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span>Payment Method:</span>
+                            <span>${receipt.payment_method === 'card' ? 'Credit Card' : 'Bank Transfer'}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="detail-row highlight">
+                        <span><strong>Total Amount:</strong></span>
+                        <span><strong>R${parseFloat(receipt.amount).toFixed(2)}</strong></span>
+                    </div>
+                </div>
+                
+                <div class="contact-info">
+                    <h4>Contact Information</h4>
+                    <p><strong>Tenant:</strong> ${receipt.tenant.name} (${receipt.tenant.email})</p>
+                    <p><strong>Landlord:</strong> ${receipt.landlord.name} (${receipt.landlord.email})</p>
+                </div>
+            `;
+        }
+
+        function formatDate(dateString) {
+            return new Date(dateString).toLocaleDateString('en-US', {
+                year: 'numeric', month: 'short', day: 'numeric'
+            });
+        }
+        
+        function formatDateTime(dateTimeString) {
+            return new Date(dateTimeString).toLocaleString('en-US', {
+                year: 'numeric', month: 'short', day: 'numeric',
+                hour: '2-digit', minute: '2-digit'
+            });
+        }
+
+        function showNotification(message, type) {
+            // Your existing notification function
+            alert(message); // Simple fallback
+        }
+    </script>
+
+    <style>
+        .receipt-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .receipt-header {
+            text-align: center;
+            margin-bottom: var(--space-lg);
+        }
+
+        .receipt-details {
+            margin-bottom: var(--space-lg);
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: var(--space-sm) 0;
+            border-bottom: 1px solid var(--gray-light);
+        }
+
+        .detail-row.highlight {
+            border-top: 2px solid var(--primary);
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: var(--primary);
+        }
+
+        .section-divider {
+            margin: var(--space-lg) 0;
+            padding-top: var(--space-lg);
+            border-top: 1px solid var(--gray-light);
+        }
+
+        .contact-info {
+            background: var(--light);
+            padding: var(--space-lg);
+            border-radius: var(--radius-md);
+            margin-top: var(--space-lg);
+        }
+
+        .receipt-actions {
+            display: flex;
+            gap: var(--space-md);
+            justify-content: center;
+            margin-top: var(--space-lg);
+        }
+
+        @media (max-width: 768px) {
+            .receipt-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</body>
+</html>

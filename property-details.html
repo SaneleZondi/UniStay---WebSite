@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Property Details - UniStay</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+      /* Property Details Specific Styles */
+.property-details-page {
+    padding: var(--space-xl) 0;
+}
+
+.property-hero {
+    margin-bottom: var(--space-xl);
+}
+
+.property-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--space-md);
+    margin-bottom: var(--space-lg);
+}
+
+.property-gallery img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    transition: var(--transition);
+}
+
+.property-gallery img:hover {
+    transform: scale(1.02);
+    box-shadow: var(--shadow-lg);
+}
+
+/* Two-column layout for property info */
+.property-layout {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: var(--space-xl);
+    margin-bottom: var(--space-xl);
+}
+
+.property-main {
+    background: var(--white);
+    padding: var(--space-xl);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+}
+
+.property-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+}
+
+.property-header {
+    margin-bottom: var(--space-lg);
+}
+
+.property-title {
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: var(--space-sm);
+    color: var(--dark);
+}
+
+.property-location {
+    font-size: 1.2rem;
+    color: var(--gray-dark);
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+}
+
+/* Compact Rating Overview */
+.property-rating-overview {
+    background: var(--light);
+    padding: var(--space-lg);
+    border-radius: var(--radius-lg);
+    margin: var(--space-lg) 0;
+    display: flex;
+    align-items: center;
+    gap: var(--space-lg);
+}
+
+.rating-display {
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.rating-score {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: var(--space-xs);
+    margin-bottom: var(--space-xs);
+}
+
+.rating-score .score {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.rating-score .out-of {
+    font-size: 1.2rem;
+    color: var(--gray);
+}
+
+.rating-stars {
+    font-size: 1.2rem;
+    margin-bottom: var(--space-xs);
+}
+
+.rating-count {
+    color: var(--gray-dark);
+    font-size: 0.9rem;
+}
+
+.view-reviews-link {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+    transition: var(--transition);
+}
+
+.view-reviews-link:hover {
+    text-decoration: underline;
+}
+
+/* Compact Property Meta */
+.property-meta {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-md);
+    margin: var(--space-lg) 0;
+}
+
+.meta-item {
+    text-align: center;
+    padding: var(--space-md);
+    background: var(--light);
+    border-radius: var(--radius-md);
+    border-left: 3px solid var(--accent-green);
+}
+
+.meta-item strong {
+    display: block;
+    font-size: 1.3rem;
+    color: var(--primary);
+    margin-bottom: var(--space-xs);
+}
+
+.meta-item span {
+    color: var(--gray-dark);
+    font-size: 0.85rem;
+    text-transform: capitalize;
+}
+
+/* Property Description & Amenities */
+.property-description {
+    margin: var(--space-lg) 0;
+    line-height: 1.7;
+}
+
+.property-description h3 {
+    margin-bottom: var(--space-md);
+    color: var(--dark);
+}
+
+.amenities {
+    margin: var(--space-lg) 0;
+}
+
+.amenities h3 {
+    margin-bottom: var(--space-md);
+    color: var(--dark);
+}
+
+.amenities-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    margin-top: var(--space-md);
+}
+
+.amenity-tag {
+    padding: 0.5rem 1rem;
+    background: var(--light);
+    border-radius: 20px;
+    font-size: 0.85rem;
+    color: var(--dark);
+    font-weight: 500;
+    border: 1px solid var(--gray-light);
+}
+
+/* Sidebar Sections */
+.sidebar-card {
+    background: var(--white);
+    padding: var(--space-lg);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+}
+
+.sidebar-card h3 {
+    margin-bottom: var(--space-md);
+    color: var(--dark);
+    font-size: 1.2rem;
+    border-bottom: 2px solid var(--light);
+    padding-bottom: var(--space-sm);
+}
+
+/* Landlord Info in Sidebar */
+.landlord-info p {
+    margin-bottom: var(--space-sm);
+    display: flex;
+    justify-content: between;
+}
+
+.landlord-info strong {
+    color: var(--dark);
+    min-width: 80px;
+    display: inline-block;
+}
+
+.landlord-actions {
+    margin-top: var(--space-md);
+}
+
+.landlord-actions .btn {
+    width: 100%;
+    justify-content: center;
+}
+
+/* Quick Actions in Sidebar */
+.quick-actions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.quick-action {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm);
+    background: var(--light);
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    color: var(--dark);
+    transition: var(--transition);
+}
+
+.quick-action:hover {
+    background: var(--primary);
+    color: var(--white);
+    text-decoration: none;
+}
+
+.quick-action i {
+    font-size: 1.2rem;
+    width: 24px;
+    text-align: center;
+}
+
+/* Rooms Section */
+.rooms-section {
+    margin: var(--space-xl) 0;
+}
+
+.rooms-section h2 {
+    margin-bottom: var(--space-lg);
+    color: var(--dark);
+    text-align: center;
+}
+
+.rooms-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: var(--space-lg);
+}
+
+.room-card {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    box-shadow: var(--shadow-md);
+    transition: var(--transition);
+    border: 1px solid var(--gray-light);
+}
+
+.room-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+}
+
+.room-card.room-unavailable {
+    opacity: 0.6;
+    background: var(--light);
+}
+
+.room-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: var(--space-md);
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+}
+
+.room-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: var(--space-xs);
+    color: var(--dark);
+}
+
+.room-type {
+    background: var(--primary);
+    color: var(--white);
+    padding: 0.5rem 1rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.room-price {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--accent-green);
+}
+
+.room-features {
+    margin: var(--space-md) 0;
+}
+
+.room-feature {
+    display: flex;
+    align-items: center;
+    margin: var(--space-sm) 0;
+    color: var(--gray-dark);
+    gap: var(--space-sm);
+}
+
+.room-feature i {
+    width: 20px;
+    text-align: center;
+}
+
+.room-status {
+    margin: var(--space-md) 0;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.status-available {
+    background: #d4edda;
+    color: #155724;
+}
+
+.status-unavailable {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.book-room-btn {
+    width: 100%;
+    padding: 1rem;
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    color: var(--white);
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    margin-top: var(--space-md);
+}
+
+.book-room-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.book-room-btn:disabled {
+    background: var(--gray-light);
+    color: var(--gray);
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Error States */
+.error-message {
+    text-align: center;
+    padding: var(--space-xl);
+    color: var(--error);
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+}
+
+.error-message h3 {
+    margin-bottom: var(--space-md);
+    color: var(--error);
+}
+
+@media (max-width: 968px) {
+    .property-layout {
+        grid-template-columns: 1fr;
+        gap: var(--space-lg);
+    }
+    
+    .property-sidebar {
+        order: -1;
+    }
+}
+
+@media (max-width: 768px) {
+    .property-gallery {
+        grid-template-columns: 1fr;
+    }
+
+    .property-gallery img {
+        height: 200px;
+    }
+
+    .property-main {
+        padding: var(--space-lg);
+    }
+
+    .property-title {
+        font-size: 1.8rem;
+    }
+
+    .property-rating-overview {
+        flex-direction: column;
+        gap: var(--space-lg);
+        text-align: center;
+    }
+
+    .property-meta {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .rooms-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .room-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 480px) {
+    .property-details-page {
+        padding: var(--space-lg) 0;
+    }
+
+    .property-main {
+        padding: var(--space-md);
+        margin: 0 var(--space-sm) var(--space-lg) var(--space-sm);
+    }
+
+    .property-title {
+        font-size: 1.5rem;
+    }
+
+    .property-meta {
+        grid-template-columns: 1fr;
+    }
+
+    .amenity-tag {
+        padding: 0.5rem 1rem;
+        font-size: 0.8rem;
+    }
+    
+    .sidebar-card {
+        padding: var(--space-md);
+    }
+}
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">UniStay</a>
+                <nav class="nav">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="properties.html" class="nav-link">Properties</a>
+                    <a href="dashboard.html" class="nav-link" id="dashboardLink" style="display: none;">Dashboard</a>
+                    <a href="login.html" class="nav-link" id="loginLink">Login</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="main property-details-page">
+        <div class="container">
+            <div id="propertyDetail">
+                <div class="loading">
+                    <div class="loading-spinner">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                    <p>Loading property details...</p>
+                </div>
+            </div>
+            
+            <div class="rooms-section">
+                <h2>Available Rooms</h2>
+                <div id="roomsContainer" class="rooms-grid">
+                    <div class="loading">
+                        <div class="loading-spinner">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                        <p>Loading available rooms...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <p>&copy; 2025 UniStay. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Include config first, then property details -->
+    <script src="assets/js/config.js"></script>
+    <script src="assets/js/property-details.js"></script>
+    <script src="assets/js/navigation.js"></script>
+</body>
+</html>

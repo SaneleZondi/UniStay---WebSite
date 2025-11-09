@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Confirm Booking – UniStay</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <link rel="stylesheet" href="assets/css/booking.css" />
+  
+  <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">UniStay</a>
+                <nav class="nav">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="properties.html" class="nav-link">Properties</a>
+                    <a href="dashboard.html" class="nav-link" id="dashboardLink" style="display: none;">Dashboard</a>
+                    <a href="login.html" class="nav-link" id="loginLink">Login</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+</head>
+
+<body>
+
+
+
+  <main class="booking-page">
+    <div class="booking-container">
+      <div class="booking-header">
+        <h1>Complete Your Booking</h1>
+        <p>Review your booking details and confirm your reservation</p>
+      </div>
+      
+      <!-- Progress Steps -->
+      <div class="booking-progress">
+        <div class="progress-step active">
+          <div class="step-number">1</div>
+          <span>Property Details</span>
+        </div>
+        <div class="progress-step active">
+          <div class="step-number">2</div>
+          <span>Booking Details</span>
+        </div>
+        <div class="progress-step">
+          <div class="step-number">3</div>
+          <span>Payment</span>
+        </div>
+      </div>
+      
+      <div class="booking-content">
+        <div class="property-summary" id="propertySummary">
+          <div class="property-image">
+            <img id="propertyImage" src="assets/images/default-property.jpg" alt="Property image">
+          </div>
+          <div class="property-details">
+            <h3 id="propertyTitle">Loading property details...</h3>
+            <p class="property-location" id="propertyLocation">-</p>
+            <p class="property-price" id="propertyPrice">R0/month</p>
+            <div class="room-type" id="roomType">-</div>
+            <div class="property-features">
+              <span id="propertyBedrooms">-</span>
+              <span id="propertyBathrooms">-</span>
+              <span id="propertyStatus">-</span>
+            </div>
+            <div class="property-description" id="propertyDescription">
+              Loading description...
+            </div>
+          </div>
+        </div>
+
+        <!-- Contact Information Section -->
+        <div class="guest-info-section" id="contactInfoSection">
+          <h3>Contact Information</h3>
+          <p class="section-description" id="contactDescription">We'll use this information to contact you about your booking</p>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="guest_name">Full Name *</label>
+              <input type="text" id="guest_name" name="guest_name" required>
+              <div class="error-message" id="guestNameError"></div>
+            </div>
+            
+            <div class="form-group">
+              <label for="guest_email">Email Address *</label>
+              <input type="email" id="guest_email" name="guest_email" required>
+              <div class="error-message" id="guestEmailError"></div>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="guest_phone">Phone Number</label>
+            <input type="tel" id="guest_phone" name="guest_phone" placeholder="+27 12 345 6789">
+            <div class="error-message" id="guestPhoneError"></div>
+            <small style="color: #666; font-size: 0.85rem; margin-top: 5px; display: block;">
+              💡 We recommend adding a phone number for better communication with the landlord
+            </small>
+          </div>
+        </div>
+
+        <!-- Booking Form -->
+        <form id="bookingForm">
+          <!-- Hidden fields for room-based booking -->
+          <input type="hidden" id="propertyId" name="property_id">
+          <input type="hidden" id="roomId" name="room_id">
+          
+          <div class="form-section">
+            <h3>Booking Period</h3>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label for="check_in">Move-in Date *</label>
+                <input type="date" id="check_in" name="check_in" required>
+                <div class="error-message" id="checkInError"></div>
+              </div>
+              
+              <div class="form-group">
+                <label for="duration">Duration (Months) *</label>
+                <select id="duration" name="duration" required>
+                  <option value="">Select duration</option>
+                  <option value="1">1 Month</option>
+                  <option value="3">3 Months</option>
+                  <option value="6">6 Months</option>
+                  <option value="12">12 Months</option>
+                  <option value="custom">Custom</option>
+                </select>
+                <div class="error-message" id="durationError"></div>
+              </div>
+            </div>
+            
+            <div class="form-group custom-months-group" id="customMonthsGroup" style="display: none;">
+              <label for="custom_months">Number of Months (1-24) *</label>
+              <input type="number" id="custom_months" name="custom_months" min="1" max="24" value="1">
+              <div class="error-message" id="customMonthsError"></div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <div class="form-group">
+              <label for="guests">Number of Occupants *</label>
+              <select id="guests" name="guests" required>
+                <option value="">Select number of guests</option>
+                <option value="1">1 Person</option>
+                <option value="2">2 People</option>
+                <option value="3">3 People</option>
+                <option value="4">4 People</option>
+                <option value="5">5+ People</option>
+              </select>
+              <div class="error-message" id="guestsError"></div>
+            </div>
+            
+            <div class="form-group">
+              <label for="special_requests">Special Requests (Optional)</label>
+              <textarea id="special_requests" name="special_requests" rows="3" placeholder="Any special requirements or questions..."></textarea>
+            </div>
+          </div>
+
+          <!-- Detailed Price Breakdown -->
+          <div class="price-summary">
+            <h3>Booking Summary</h3>
+            
+            <div class="price-line">
+              <span>Monthly Rate:</span>
+              <span id="summaryMonthlyRate">R0.00</span>
+            </div>
+            
+            <div class="price-line">
+              <span>Duration:</span>
+              <span id="summaryDuration">0 months</span>
+            </div>
+            
+            <div class="price-line">
+              <span>Subtotal (Rent):</span>
+              <span id="summarySubtotal">R0.00</span>
+            </div>
+            
+            <div class="price-line">
+              <span>Service Fee (5%):</span>
+              <span id="summaryServiceFee">R0.00</span>
+            </div>
+            
+            <div class="price-line highlight">
+              <span><strong>Deposit Required (30%):</strong></span>
+              <span id="summaryDeposit"><strong>R0.00</strong></span>
+            </div>
+            
+            <div class="price-line">
+              <span>Balance Due:</span>
+              <span id="summaryBalance">R0.00</span>
+            </div>
+            
+            <div class="price-total">
+              <span><strong>Total Amount:</strong></span>
+              <span id="summaryTotal"><strong>R0.00</strong></span>
+            </div>
+            
+            <div class="payment-note">
+              <p>💡 <strong>Note:</strong> Pay the deposit now to secure your booking. The remaining balance is due before check-in.</p>
+            </div>
+          </div>
+
+          <div class="booking-actions">
+            <button type="button" class="btn-secondary" onclick="goBack()">Cancel</button>
+            <button type="submit" id="confirmBtn" class="btn-primary">
+              <span id="buttonText">Confirm Booking & Pay Deposit</span>
+              <div class="spinner" id="buttonSpinner" style="display: none;"></div>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <p>&copy; 2025 UniStay. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+  <script src="assets/js/config.js"></script>
+  <script src="assets/js/booking.js"></script>
+  <script src="assets/js/navigation.js"></script>
+</body>
+</html>

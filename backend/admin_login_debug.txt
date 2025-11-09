@@ -1,0 +1,24 @@
+=== ADMIN LOGIN ATTEMPT ===
+Time: 2025-09-30 10:37:12
+Method: POST
+Content Type: application/json
+Raw input: {"email":"admin@unistay.co.za","password":"password"}
+----------------------------------------
+=== ADMIN LOGIN ATTEMPT ===
+Time: 2025-09-30 10:37:21
+Method: POST
+Content Type: application/json
+Raw input: {"email":"admin@unistay.com","password":"password"}
+----------------------------------------
+=== ADMIN LOGIN ATTEMPT ===
+Time: 2025-10-01 21:11:33
+Method: POST
+Content Type: application/json
+Raw input: {"email":"admin@unistay.co.za","password":"password"}
+----------------------------------------
+=== ADMIN LOGIN ATTEMPT ===
+Time: 2025-10-12 06:09:29
+Method: POST
+Content Type: application/json
+Raw input: {"email":"admin@unistay.com","password":"password"}
+----------------------------------------

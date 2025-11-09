@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Property - UniStay</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        .edit-property-container {
+            max-width: 900px;
+            margin: var(--space-xl) auto;
+            padding: 0 var(--space-md);
+        }
+        
+        .form-section {
+            background: var(--white);
+            padding: var(--space-lg);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            margin-bottom: var(--space-lg);
+        }
+        
+        .form-group {
+            margin-bottom: var(--space-md);
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-md);
+            margin-bottom: var(--space-md);
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: var(--space-md);
+            margin-top: var(--space-lg);
+            justify-content: flex-end;
+        }
+        
+        .rooms-section {
+            margin: var(--space-lg) 0;
+            padding: var(--space-lg);
+            border: 2px solid #e3f2fd;
+            border-radius: var(--radius-lg);
+            background: #f8fcff;
+        }
+        
+        .room-entry {
+            border: 1px solid var(--gray-light);
+            padding: var(--space-lg);
+            margin: var(--space-md) 0;
+            border-radius: var(--radius-lg);
+            background: var(--white);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .btn-remove-room {
+            background: var(--error);
+            color: var(--white);
+            border: none;
+            padding: var(--space-xs) var(--space-md);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+        
+        .btn-remove-room:hover {
+            background: #c82333;
+            transform: translateY(-1px);
+        }
+        
+        .loading {
+            text-align: center;
+            padding: var(--space-xl);
+            color: var(--gray);
+        }
+        
+        .error-message {
+            background: #ffe6e6;
+            color: var(--error);
+            padding: var(--space-md);
+            border-radius: var(--radius-md);
+            margin: var(--space-md) 0;
+            text-align: center;
+            border-left: 4px solid var(--error);
+        }
+        
+        .success-message {
+            background: #d4edda;
+            color: var(--success);
+            padding: var(--space-md);
+            border-radius: var(--radius-md);
+            margin: var(--space-md) 0;
+            text-align: center;
+            border-left: 4px solid var(--success);
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: var(--space-xs);
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--gray-light);
+            border-radius: var(--radius-md);
+            font-size: 1rem;
+            transition: var(--transition);
+            font-family: inherit;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(26, 35, 126, 0.1);
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+            }
+            
+            .form-actions .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Consistent header with other pages -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">UniStay</a>
+                <nav class="nav">
+                    <a href="landlord-dashboard.html" class="nav-link">Dashboard</a>
+                    <a href="my-properties.html" class="nav-link">My Properties</a>
+                    <a href="profile.html" class="nav-link">Profile</a>
+                    <a href="#" class="nav-link" onclick="logout()">Logout</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="container">
+            <div class="edit-property-container">
+                <h1>Edit Property</h1>
+                <div id="loadingMessage" class="loading">Loading property details...</div>
+                
+                <form id="editPropertyForm" style="display: none;">
+                    <!-- Basic Property Information -->
+                    <div class="form-section">
+                        <h2>Basic Property Information</h2>
+                        
+                        <div class="form-group">
+                            <label for="title">Property Title *</label>
+                            <input type="text" id="title" name="title" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="description">Description *</label>
+                            <textarea id="description" name="description" rows="4" required></textarea>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="address">Address *</label>
+                                <input type="text" id="address" name="address" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="city">City *</label>
+                                <input type="text" id="city" name="city" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="property_type">Property Type *</label>
+                                <select id="property_type" name="property_type" required>
+                                    <option value="">Select Property Type</option>
+                                    <option value="apartment">Apartment</option>
+                                    <option value="house">House</option>
+                                    <option value="townhouse">Townhouse</option>
+                                    <option value="condo">Condo</option>
+                                    <option value="shared_house">Shared House</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="status">Status</label>
+                                <select id="status" name="status">
+                                    <option value="available">Available</option>
+                                    <option value="unavailable">Unavailable</option>
+                                    <option value="fully_booked">Fully Booked</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="amenities">Property Amenities</label>
+                            <input type="text" id="amenities" name="amenities" placeholder="WiFi, Parking, Kitchen, Laundry, etc.">
+                        </div>
+                    </div>
+
+                    <!-- Room Management Section -->
+                    <div class="form-section">
+                        <h2>Property Rooms</h2>
+                        <p>Manage the individual rooms in your property. Each room can be booked separately by tenants.</p>
+                        
+                        <div id="roomsContainer">
+                            <!-- Rooms will be loaded here dynamically -->
+                        </div>
+                        
+                        <button type="button" id="addRoomBtn" class="btn btn-secondary">
+                            + Add Another Room
+                        </button>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Update Property</button>
+                        <button type="button" class="btn btn-secondary" onclick="window.history.back()">Cancel</button>
+                    </div>
+                </form>
+                
+                <div id="message"></div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <p>&copy; 2025 UniStay. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/js/config.js"></script>
+    <script src="assets/js/edit-property.js"></script>
+</body>
+</html>

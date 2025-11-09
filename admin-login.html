@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - UniStay</title>
+     <link rel="stylesheet" href="assets/css/admin.css">
+    <style>
+        .admin-login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #1a237e 0%, #303f9f 100%);
+            padding: 20px;
+        }
+
+        .admin-login-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius-xl);
+            padding: var(--spacing-xl);
+            width: 100%;
+            max-width: 400px;
+            box-shadow: var(--glass-shadow);
+        }
+
+        .admin-login-header {
+            text-align: center;
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .admin-login-header h1 {
+            color: var(--admin-primary);
+            margin: 0 0 var(--spacing-xs) 0;
+            font-size: 2rem;
+        }
+
+        .admin-login-header p {
+            color: var(--admin-text-light);
+            margin: 0;
+        }
+
+        .admin-login-form .form-group {
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .admin-login-form label {
+            display: block;
+            margin-bottom: var(--spacing-xs);
+            color: var(--admin-text);
+            font-weight: 600;
+        }
+
+        .admin-login-form input {
+            width: 100%;
+            padding: var(--spacing-md);
+            border: 1px solid var(--admin-border);
+            border-radius: var(--border-radius-md);
+            background: var(--admin-light);
+            color: var(--admin-text);
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+
+        .admin-login-form input:focus {
+            outline: none;
+            border-color: var(--admin-primary);
+            box-shadow: 0 0 0 2px rgba(26, 35, 126, 0.1);
+        }
+
+        .admin-login-btn {
+            width: 100%;
+            padding: var(--spacing-md);
+            background: var(--admin-primary);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius-md);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .admin-login-btn:hover {
+            background: var(--admin-primary-light);
+            transform: translateY(-1px);
+        }
+
+        .admin-login-btn:active {
+            transform: translateY(0);
+        }
+
+        .admin-login-footer {
+            text-align: center;
+            margin-top: var(--spacing-lg);
+            color: var(--admin-text-light);
+        }
+
+        .admin-login-footer a {
+            color: var(--admin-primary);
+            text-decoration: none;
+        }
+
+        .admin-login-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            background: var(--error-color);
+            color: white;
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius-md);
+            margin-bottom: var(--spacing-lg);
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-form">
+            <div class="form-header">
+                <h1><i class="fas fa-cogs"></i> Admin Portal</h1>
+                <p>UniStay Administration System</p>
+            </div>
+            
+            <form id="adminLoginForm">
+                <div class="input-group">
+                    <div class="input-field">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="adminEmail" placeholder="Admin Email" required>
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <div class="input-field">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="adminPassword" placeholder="Password" required>
+                    </div>
+                </div>
+                
+                <button type="submit" class="login-button">
+                    <span class="button-text">Sign In as Admin</span>
+                </button>
+            </form>
+            
+            <div class="form-footer">
+                <p><a href="login.html">← Back to User Login</a></p>
+            </div>
+            
+            <div id="errorMessage" class="error-message" style="display: none;"></div>
+        </div>
+    </div>
+
+    <script src="assets/js/config.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.getElementById('adminLoginForm');
+            const errorMessage = document.getElementById('errorMessage');
+
+            // Redirect if already logged in as admin
+            const loggedInUser = sessionStorage.getItem('LoggedInUser');
+            const userRole = sessionStorage.getItem('UserRole');
+            
+            if (loggedInUser && userRole === 'admin') {
+                window.location.href = 'admin-dashboard.html';
+                return;
+            }
+
+            loginForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const email = document.getElementById('adminEmail').value.trim();
+                const password = document.getElementById('adminPassword').value;
+
+                // Clear previous errors
+                errorMessage.style.display = 'none';
+
+                // Basic validation
+                if (!email || !password) {
+                    showError('Please fill in all fields');
+                    return;
+                }
+
+                try {
+                    const response = await fetch('http://localhost/UniStay---Website/backend/api/auth/admin-login.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        credentials: 'include',
+                        body: JSON.stringify({
+                            email: email,
+                            password: password
+                        })
+                    });
+
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        // Store admin info in sessionStorage
+                        sessionStorage.setItem('LoggedInUser', result.user.email);
+                        sessionStorage.setItem('UserRole', result.user.role);
+                        sessionStorage.setItem('UserName', result.user.name);
+                        sessionStorage.setItem('UserId', result.user.id);
+                        
+                        // Store session token
+                        if (result.session_token) {
+                            sessionStorage.setItem('session_token', result.session_token);
+                        }
+
+                        // Redirect to admin dashboard
+                        window.location.href = 'admin-dashboard.html';
+                    } else {
+                        showError(result.error || 'Admin authentication failed');
+                    }
+                } catch (err) {
+                    console.error('Admin login error:', err);
+                    showError('Network error. Please try again.');
+                }
+            });
+
+            function showError(message) {
+                errorMessage.textContent = message;
+                errorMessage.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>

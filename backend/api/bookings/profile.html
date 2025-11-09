@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Profile - UniStay</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <header>
+        <div class="logo">UniStay</div>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="tenant-dashboard.html" id="dashboardLink">Dashboard</a>
+            <a href="#" id="logoutBtn">Log Out</a>
+        </nav>
+    </header>
+
+    <main>
+        <div class="container">
+            <h1>My Profile</h1>
+            <form id="profileForm">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="email" name="email" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="tel" id="phone" name="phone">
+                </div>
+                <button type="submit" class="btn-primary">Update Profile</button>
+            </form>
+        </div>
+    </main>
+
+    <script src="assets/js/config.js"></script>
+    <script src="assets/js/profile.js"></script>
+</body>
+</html>

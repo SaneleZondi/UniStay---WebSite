@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Fixed Admin Login</title>
+</head>
+<body>
+    <h1>Test Fixed Admin Login</h1>
+    <button onclick="testFixedLogin()">Test Fixed Admin Login</button>
+    <pre id="result"></pre>
+
+    <script>
+        async function testFixedLogin() {
+            try {
+                const response = await fetch('http://localhost/UniStay---Website/backend/api/auth/admin-login.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        email: 'admin@unistay.com',
+                        password: 'password'
+                    })
+                });
+
+                const result = await response.json();
+                document.getElementById('result').textContent = JSON.stringify(result, null, 2);
+                
+                if (result.success) {
+                    // Store session data
+                    sessionStorage.setItem('session_token', result.session_token);
+                    sessionStorage.setItem('LoggedInUser', result.user.email);
+                    sessionStorage.setItem('UserRole', result.user.role);
+                    sessionStorage.setItem('UserName', result.user.name);
+                    
+                    // Test admin API immediately
+                    setTimeout(() => {
+                        testAdminDashboard();
+                    }, 1000);
+                }
+            } catch (error) {
+                document.getElementById('result').textContent = 'Error: ' + error.message;
+            }
+        }
+
+        async function testAdminDashboard() {
+            try {
+                const response = await fetch('http://localhost/UniStay---Website/backend/api/admin/statistics.php', {
+                    credentials: 'include'
+                });
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert('✅ SUCCESS! Admin dashboard is working!');
+                    // Redirect to admin dashboard
+                    window.location.href = 'admin-dashboard.html';
+                } else {
+                    alert('❌ Admin API still failing: ' + result.error);
+                }
+            } catch (error) {
+                alert('❌ Admin API error: ' + error.message);
+            }
+        }
+    </script>
+</body>
+</html>

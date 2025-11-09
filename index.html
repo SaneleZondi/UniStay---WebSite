@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UniStay - Student Accommodation</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        /* Maintenance Mode Styles - Only in index.html */
+        .maintenance-alert {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            color: white;
+            overflow: hidden;
+        }
+
+        .maintenance-container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: var(--space-xl);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            max-width: 600px;
+            width: 90%;
+            text-align: center;
+            color: var(--dark);
+            position: relative;
+            z-index: 2;
+        }
+
+        .maintenance-header .maintenance-icon {
+            font-size: 4rem;
+            color: var(--primary);
+            margin-bottom: var(--space-md);
+            animation: bounce 2s infinite;
+        }
+
+        .maintenance-header h1 {
+            color: var(--dark);
+            margin-bottom: var(--space-md);
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+
+        .maintenance-header p {
+            color: var(--gray-dark);
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin-bottom: var(--space-lg);
+        }
+
+        .countdown-section {
+            margin: var(--space-lg) 0;
+            padding: var(--space-lg);
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: var(--radius-lg);
+            color: white;
+        }
+
+        .countdown-section h3 {
+            margin-bottom: var(--space-md);
+            font-size: 1.3rem;
+        }
+
+        .countdown-timer {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-lg);
+        }
+
+        .countdown-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .countdown-number {
+            font-size: 3rem;
+            font-weight: 700;
+            background: rgba(255, 255, 255, 0.2);
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius-md);
+            min-width: 80px;
+            backdrop-filter: blur(10px);
+        }
+
+        .countdown-label {
+            margin-top: var(--space-xs);
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .progress-section {
+            margin: var(--space-lg) 0;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background: var(--gray-light);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            margin-bottom: var(--space-md);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--success), #38a169);
+            border-radius: var(--radius-md);
+            width: 0%;
+            transition: width 1s ease-in-out;
+        }
+
+        .progress-text {
+            color: var(--gray-dark);
+            font-size: 0.9rem;
+        }
+
+        .maintenance-details {
+            margin: var(--space-lg) 0;
+            text-align: left;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: var(--space-md);
+            padding: var(--space-md);
+            background: #f7fafc;
+            border-radius: var(--radius-md);
+            border-left: 4px solid var(--primary);
+        }
+
+        .detail-item i {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-right: var(--space-md);
+            width: 40px;
+        }
+
+        .detail-item h4 {
+            color: var(--dark);
+            margin-bottom: var(--space-xs);
+            font-size: 1.1rem;
+        }
+
+        .detail-item p {
+            color: var(--gray-dark);
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        .contact-info {
+            margin: var(--space-lg) 0;
+            padding: var(--space-md);
+            background: #edf2f7;
+            border-radius: var(--radius-md);
+        }
+
+        .contact-info p {
+            margin-bottom: var(--space-md);
+            color: var(--gray-dark);
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-md);
+        }
+
+        .social-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .social-link:hover {
+            transform: translateY(-2px);
+        }
+
+        .refresh-notice {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-xs);
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin-top: var(--space-md);
+        }
+
+        .refresh-notice i {
+            color: var(--primary);
+        }
+
+        /* Animated Background */
+        .maintenance-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .bg-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .circle-1 {
+            width: 200px;
+            height: 200px;
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .circle-2 {
+            width: 150px;
+            height: 150px;
+            top: 60%;
+            right: 10%;
+            animation-delay: 2s;
+        }
+
+        .circle-3 {
+            width: 100px;
+            height: 100px;
+            bottom: 20%;
+            left: 20%;
+            animation-delay: 4s;
+        }
+
+        /* Animations */
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-20px) rotate(180deg);
+            }
+        }
+
+        /* Responsive Maintenance */
+        @media (max-width: 768px) {
+            .maintenance-container {
+                padding: var(--space-lg);
+                margin: var(--space-md);
+            }
+
+            .countdown-timer {
+                gap: var(--space-md);
+            }
+
+            .countdown-number {
+                font-size: 2rem;
+                min-width: 60px;
+            }
+
+            .maintenance-header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Maintenance Alert -->
+    <div id="maintenanceAlert" class="maintenance-alert" style="display: none;">
+        <div class="maintenance-container">
+            <div class="maintenance-header">
+                <div class="maintenance-icon">
+                    <i class="fas fa-tools"></i>
+                </div>
+                <h1>We'll Be Back Soon!</h1>
+                <p id="maintenanceMessage">We're currently performing scheduled maintenance to improve your experience.</p>
+            </div>
+
+            <div class="countdown-section">
+                <h3>Expected Completion In:</h3>
+                <div class="countdown-timer">
+                    <div class="countdown-item">
+                        <span class="countdown-number" id="countdown-hours">00</span>
+                        <span class="countdown-label">Hours</span>
+                    </div>
+                    <div class="countdown-item">
+                        <span class="countdown-number" id="countdown-minutes">00</span>
+                        <span class="countdown-label">Minutes</span>
+                    </div>
+                    <div class="countdown-item">
+                        <span class="countdown-number" id="countdown-seconds">00</span>
+                        <span class="countdown-label">Seconds</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="progress-section">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="progress-text">System Maintenance in Progress: <span id="progressPercent">0%</span></div>
+            </div>
+
+            <div class="maintenance-details">
+                <div class="detail-item">
+                    <i class="fas fa-sync-alt fa-spin"></i>
+                    <div>
+                        <h4>System Updates</h4>
+                        <p>Performing critical security and performance updates</p>
+                    </div>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-database"></i>
+                    <div>
+                        <h4>Database Optimization</h4>
+                        <p>Optimizing database for faster response times</p>
+                    </div>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-shield-alt"></i>
+                    <div>
+                        <h4>Security Enhancements</h4>
+                        <p>Implementing latest security protocols</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="contact-info">
+                <p>For urgent inquiries, contact us at <strong>support@unistay.com</strong></p>
+                <div class="social-links">
+                    <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-facebook"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+
+            <div class="refresh-notice">
+                <i class="fas fa-info-circle"></i>
+                <p>This page will automatically refresh when maintenance is complete</p>
+            </div>
+        </div>
+        
+        <!-- Animated Background Elements -->
+        <div class="maintenance-bg">
+            <div class="bg-circle circle-1"></div>
+            <div class="bg-circle circle-2"></div>
+            <div class="bg-circle circle-3"></div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div id="mainContent">
+        <header class="header">
+            <div class="container">
+                <div class="header-content">
+                    <a href="index.html" class="logo">UniStay</a>
+                    <nav class="nav">
+                        <a href="index.html" class="nav-link active">Home</a>
+                        <a href="properties.html" class="nav-link">Browse Properties</a>
+                        <a href="login.html" class="nav-link" id="loginLink">Get Access</a>
+                        <a href="tenant-dashboard.html" class="nav-link" id="tenantDashboardLink" style="display:none">Dashboard</a>
+                        <a href="landlord-dashboard.html" class="nav-link" id="landlordDashboardLink" style="display:none">Landlord</a>
+                    </nav>
+                </div>
+            </div>
+        </header>
+
+        <main class="main">
+            <section class="hero">
+                <div class="container">
+                    <h1 class="hero-title">Find the Perfect Student Stay</h1>
+                    <p class="hero-subtitle">Browse verified and affordable student accommodation across campuses.</p>
+                    <a href="properties.html" class="btn btn-primary">View Listings</a>
+                </div>
+            </section>
+
+            <section class="container">
+                <h2 class="text-center mb-4">Featured Properties</h2>
+                <div class="property-grid">
+                  <div class="property-card">
+    <div class="property-image">
+        <img src="assets/images/property1.jpeg" alt="Sunny Side Apartment" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjBmMGYwIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPlByb3BlcnR5IEltYWdlPC90ZXh0Pjwvc3ZnPg=='">
+    </div>
+    <div class="property-content">
+        <h3 class="property-title">Sunny Side Apartment</h3>
+        <p class="property-location">📍 Durban</p>
+        <div class="room-breakdown">
+            <span class="room-type-tag">2 Single</span>
+            <span class="room-type-tag">1 Double</span>
+        </div>
+        <div class="property-actions">
+            <a href="properties.html" class="btn btn-primary">View Details</a>
+        </div>
+    </div>
+</div>
+
+<div class="property-card">
+    <div class="property-image">
+        <img src="assets/images/property2.jpeg" alt="Campus View Room" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjBmMGYwIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPlByb3BlcnR5IEltYWdlPC90ZXh0Pjwvc3ZnPg=='">
+    </div>
+    <div class="property-content">
+        <h3 class="property-title">Campus View Room</h3>
+        <p class="property-location">📍 Cape Town</p>
+        <div class="room-breakdown">
+            <span class="room-type-tag">4 Single</span>
+            <span class="room-type-tag">2 Shared</span>
+        </div>
+        <div class="property-actions">
+            <a href="properties.html" class="btn btn-primary">View Details</a>
+        </div>
+    </div>
+</div>
+
+<div class="property-card">
+    <div class="property-image">
+        <img src="assets/images/property3.jpeg" alt="City Center Flat" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjBmMGYwIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPlByb3BlcnR5IEltYWdlPC90ZXh0Pjwvc3ZnPg=='">
+    </div>
+    <div class="property-content">
+        <h3 class="property-title">City Center Flat</h3>
+        <p class="property-location">📍 Johannesburg</p>
+        <div class="room-breakdown">
+            <span class="room-type-tag">1 Studio</span>
+            <span class="room-type-tag">2 Double</span>
+        </div>
+        <div class="property-actions">
+            <a href="properties.html" class="btn btn-primary">View Details</a>
+        </div>
+    </div>
+</div> 
+                </div>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-content">
+                    <p>&copy; 2025 UniStay. All rights reserved.</p>
+                    <nav class="footer-links">
+                        <a href="about.html" class="footer-link">About Us</a>
+                        <a href="contact.html" class="footer-link">Contact</a>
+                        <a href="faq.html" class="footer-link">FAQ</a>
+                    </nav>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="assets/js/config.js"></script>
+    <script src="assets/js/navigation.js"></script>
+    <script>
+        // Enhanced Maintenance Mode with Countdown
+        class MaintenanceDisplay {
+            constructor() {
+                this.countdownInterval = null;
+                this.progressInterval = null;
+                this.targetTime = null;
+            }
+
+            async checkMaintenanceMode() {
+                try {
+                    const response = await fetch('http://localhost/UniStay---Website/backend/api/system/maintenance-status.php');
+                    
+                    if (!response.ok) return false;
+                    
+                    const data = await response.json();
+                    console.log('Maintenance check:', data);
+                    
+                    if (data.success && data.maintenance_mode) {
+                        this.showMaintenancePage(data);
+                        return true;
+                    }
+                    
+                    return false;
+                } catch (error) {
+                    console.error('Maintenance check error:', error);
+                    return false;
+                }
+            }
+
+            showMaintenancePage(data) {
+                // Hide main content
+                const mainContent = document.getElementById('mainContent');
+                if (mainContent) mainContent.style.display = 'none';
+
+                // Show maintenance alert
+                const maintenanceAlert = document.getElementById('maintenanceAlert');
+                if (maintenanceAlert) {
+                    maintenanceAlert.style.display = 'flex';
+                    
+                    // Update message
+                    const messageElement = document.getElementById('maintenanceMessage');
+                    if (messageElement && data.maintenance_message) {
+                        messageElement.textContent = data.maintenance_message;
+                    }
+                }
+
+                // Start animations
+                this.startCountdown();
+                this.startProgressAnimation();
+                this.startAutoRefresh();
+            }
+
+            startCountdown() {
+                // Set target time to 2 hours from now for demo
+                this.targetTime = new Date();
+                this.targetTime.setHours(this.targetTime.getHours() + 2);
+
+                this.countdownInterval = setInterval(() => {
+                    const now = new Date();
+                    const difference = this.targetTime - now;
+
+                    if (difference <= 0) {
+                        clearInterval(this.countdownInterval);
+                        this.updateCountdown(0, 0, 0);
+                        return;
+                    }
+
+                    const hours = Math.floor(difference / (1000 * 60 * 60));
+                    const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+                    this.updateCountdown(hours, minutes, seconds);
+                }, 1000);
+            }
+
+            updateCountdown(hours, minutes, seconds) {
+                const format = (num) => num.toString().padStart(2, '0');
+                
+                document.getElementById('countdown-hours').textContent = format(hours);
+                document.getElementById('countdown-minutes').textContent = format(minutes);
+                document.getElementById('countdown-seconds').textContent = format(seconds);
+            }
+
+            startProgressAnimation() {
+                let progress = 0;
+                const progressFill = document.getElementById('progressFill');
+                const progressPercent = document.getElementById('progressPercent');
+
+                this.progressInterval = setInterval(() => {
+                    progress += Math.random() * 2;
+                    if (progress > 95) progress = 95; // Never reach 100% during maintenance
+                    
+                    progressFill.style.width = progress + '%';
+                    progressPercent.textContent = Math.floor(progress) + '%';
+                }, 2000);
+            }
+
+            startAutoRefresh() {
+                // Check every 30 seconds if maintenance is over
+                setInterval(async () => {
+                    const maintenanceActive = await this.checkMaintenanceMode();
+                    if (!maintenanceActive) {
+                        // Maintenance is over, reload page
+                        location.reload();
+                    }
+                }, 30000);
+            }
+
+            destroy() {
+                if (this.countdownInterval) clearInterval(this.countdownInterval);
+                if (this.progressInterval) clearInterval(this.progressInterval);
+            }
+        }
+
+        // Initialize maintenance check
+        document.addEventListener('DOMContentLoaded', function() {
+            const maintenanceDisplay = new MaintenanceDisplay();
+            maintenanceDisplay.checkMaintenanceMode();
+        });
+    </script>
+</body>
+</html>

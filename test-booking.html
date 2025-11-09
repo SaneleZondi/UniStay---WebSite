@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Booking Test - UniStay</title>
+    <style>
+        .test-container { max-width: 600px; margin: 50px auto; padding: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; }
+        button { padding: 10px 15px; margin: 5px; }
+        .success { color: green; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>Booking System Test</h1>
+        
+        <div class="test-section">
+            <h3>1. Test API Connection</h3>
+            <button onclick="testAPI()">Test API Connection</button>
+            <div id="apiResult"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>2. Test Property Loading</h3>
+            <input type="number" id="testPropertyId" placeholder="Property ID" value="1">
+            <button onclick="testPropertyLoad()">Test Property Load</button>
+            <div id="propertyResult"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>3. Test Booking Creation</h3>
+            <button onclick="testBooking()">Test Booking Creation</button>
+            <div id="bookingResult"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>4. Go to Actual Booking Page</h3>
+            <a href="booking.html?property_id=1" class="btn">Test Real Booking Page</a>
+        </div>
+    </div>
+<!-- Replace the properties list section -->
+<div class="test-section">
+    <h3>2. Available Properties (Click to Test)</h3>
+    <button onclick="listProperties()">Refresh Properties List</button>
+    <div id="propertiesList"></div>
+</div>
+
+<script>
+async function listProperties() {
+    try {
+        const response = await fetch('http://localhost/UniStay---Website/backend/api/list-properties.php');
+        const result = await response.json();
+        
+        if (result.success) {
+            let html = `<p><strong>Found ${result.count} properties. Click to test:</strong></p>`;
+            if (result.properties.length > 0) {
+                html += '<div class="property-list">';
+                result.properties.forEach(prop => {
+                    if (prop.status === 'available') {
+                        html += `
+                            <div class="property-item" style="border:1px solid #ddd; padding:10px; margin:5px;">
+                                <strong>${prop.title}</strong><br>
+                                ID: ${prop.id} | ${prop.city} | R${prop.price}/month<br>
+                                <button onclick="testPropertyLoad(${prop.id})">Test Load</button>
+                                <button onclick="testBookingWithProperty(${prop.id})">Test Booking</button>
+                                <a href="booking.html?property_id=${prop.id}" target="_blank">Real Booking Page</a>
+                            </div>
+                        `;
+                    }
+                });
+                html += '</div>';
+            } else {
+                html += '<p>No available properties found.</p>';
+            }
+            document.getElementById('propertiesList').innerHTML = html;
+        } else {
+            document.getElementById('propertiesList').innerHTML = 
+                `<span class="error">❌ Error: ${result.error}</span>`;
+        }
+    } catch (err) {
+        document.getElementById('propertiesList').innerHTML = 
+            `<span class="error">❌ Error: ${err.message}</span>`;
+    }
+}
+
+async function testBookingWithProperty(propertyId) {
+    const bookingData = {
+        property_id: propertyId,
+        check_in: '2024-01-15',
+        duration: 6,
+        guests: 2,
+        guest_name: 'Test User',
+        guest_email: 'test@example.com'
+    };
+
+    try {
+        console.log('📤 Sending booking data:', bookingData);
+        
+        const response = await fetch('http://localhost/UniStay---Website/backend/api/bookings/create.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(bookingData)
+        });
+        
+        console.log('📥 Response status:', response.status);
+        
+        const responseText = await response.text();
+        console.log('📥 Raw response:', responseText);
+        
+        // Try to parse as JSON
+        let result;
+        try {
+            result = JSON.parse(responseText);
+        } catch (parseError) {
+            console.error('❌ JSON Parse Error:', parseError);
+            throw new Error('Invalid JSON response: ' + responseText.substring(0, 100));
+        }
+        
+        if (result.success) {
+            document.getElementById('bookingResult').innerHTML = 
+                `<span class="success">✅ Booking Created: ${result.message} (ID: ${result.booking_id})</span>`;
+        } else {
+            document.getElementById('bookingResult').innerHTML = 
+                `<span class="error">❌ Booking Failed: ${result.error}</span>`;
+        }
+    } catch (err) {
+        console.error('❌ Booking Error:', err);
+        document.getElementById('bookingResult').innerHTML = 
+            `<span class="error">❌ Booking Error: ${err.message}</span>`;
+    }
+}
+</script>
+</body>
+</html>

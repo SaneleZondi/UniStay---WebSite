@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard Debug - UniStay</title>
+    <link rel="stylesheet" href="assets/css/admin-dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="admin-container">
+        <div class="admin-main">
+            <header class="admin-header">
+                <h1>Admin Dashboard - Debug Mode</h1>
+                <div class="header-right">
+                    <span id="username">Admin</span>
+                </div>
+            </header>
+
+            <main class="admin-content">
+                <div class="debug-panel">
+                    <h2>Debug Information</h2>
+                    
+                    <div class="debug-section">
+                        <h3>Session Storage</h3>
+                        <pre id="sessionStorageInfo"></pre>
+                    </div>
+
+                    <div class="debug-section">
+                        <h3>API Test Results</h3>
+                        <button onclick="testAllAPIs()">Test All APIs</button>
+                        <div id="apiTestResults"></div>
+                    </div>
+
+                    <div class="debug-section">
+                        <h3>Manual API Calls</h3>
+                        <button onclick="testStatisticsAPI()">Test Statistics API</button>
+                        <button onclick="testUsersAPI()">Test Users API</button>
+                        <pre id="manualApiResults"></pre>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="assets/js/config.js"></script>
+    <script>
+        // Display session storage info
+        function displaySessionStorage() {
+            const sessionInfo = {
+                'LoggedInUser': sessionStorage.getItem('LoggedInUser'),
+                'UserRole': sessionStorage.getItem('UserRole'),
+                'UserName': sessionStorage.getItem('UserName'),
+                'session_token': sessionStorage.getItem('session_token')
+            };
+            document.getElementById('sessionStorageInfo').textContent = JSON.stringify(sessionInfo, null, 2);
+        }
+
+        // Test Statistics API
+        async function testStatisticsAPI() {
+            try {
+                console.log('Testing statistics API...');
+                const result = await apiRequest('admin/statistics.php');
+                document.getElementById('manualApiResults').textContent = JSON.stringify(result, null, 2);
+                console.log('Statistics API result:', result);
+            } catch (error) {
+                document.getElementById('manualApiResults').textContent = 'Error: ' + error.message;
+                console.error('Statistics API error:', error);
+            }
+        }
+
+        // Test Users API
+        async function testUsersAPI() {
+            try {
+                console.log('Testing users API...');
+                const result = await apiRequest('admin/users.php');
+                document.getElementById('manualApiResults').textContent = JSON.stringify(result, null, 2);
+                console.log('Users API result:', result);
+            } catch (error) {
+                document.getElementById('manualApiResults').textContent = 'Error: ' + error.message;
+                console.error('Users API error:', error);
+            }
+        }
+
+        // Test all APIs
+        async function testAllAPIs() {
+            const apis = [
+                'admin/statistics.php',
+                'admin/users.php',
+                'admin/properties.php',
+                'admin/bookings.php',
+                'admin/payments.php',
+                'admin/reviews.php'
+            ];
+
+            const results = document.getElementById('apiTestResults');
+            results.innerHTML = '';
+
+            for (const api of apis) {
+                const div = document.createElement('div');
+                div.className = 'api-test-result';
+                div.innerHTML = `<strong>Testing ${api}:</strong> <span class="status">Testing...</span>`;
+                results.appendChild(div);
+
+                try {
+                    const response = await apiRequest(api);
+                    div.querySelector('.status').textContent = '✅ SUCCESS';
+                    div.querySelector('.status').style.color = 'green';
+                    console.log(`${api}:`, response);
+                } catch (error) {
+                    div.querySelector('.status').textContent = '❌ ERROR: ' + error.message;
+                    div.querySelector('.status').style.color = 'red';
+                    console.error(`${api} error:`, error);
+                }
+            }
+        }
+
+        // Initialize debug page
+        document.addEventListener('DOMContentLoaded', function() {
+            displaySessionStorage();
+            console.log('Admin Debug Page Loaded');
+            console.log('Session Storage:', {
+                'LoggedInUser': sessionStorage.getItem('LoggedInUser'),
+                'UserRole': sessionStorage.getItem('UserRole'),
+                'UserName': sessionStorage.getItem('UserName')
+            });
+        });
+    </script>
+
+    <style>
+        .debug-panel {
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin: 20px;
+        }
+        .debug-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .debug-section h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        pre {
+            background: #f5f5f5;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        button {
+            background: #1a237e;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            margin: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #283593;
+        }
+        .api-test-result {
+            margin: 10px 0;
+            padding: 10px;
+            border-left: 4px solid #ccc;
+        }
+    </style>
+</body>
+</html>

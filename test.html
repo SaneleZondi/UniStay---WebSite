@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Maintenance</title>
+</head>
+<body>
+    <h1>Testing Maintenance Mode</h1>
+    <button onclick="testMaintenance()">Check Maintenance Status</button>
+    <div id="result"></div>
+
+    <script>
+        async function testMaintenance() {
+            try {
+                const response = await fetch('http://localhost/UniStay---Website/backend/api/system/maintenance-status.php');
+                const data = await response.json();
+                document.getElementById('result').innerHTML = 
+                    '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+            } catch (error) {
+                document.getElementById('result').innerHTML = 'Error: ' + error;
+            }
+        }
+        
+        // Test immediately
+        testMaintenance();
+    </script>
+</body>
+</html>

@@ -1,0 +1,119 @@
+=== EMAIL VERIFICATION ===
+SENT
+To: 221602011@mycput.ac.za
+URL: http://localhost/UniStay---Website/verify-email.html?token=cabf692ad6c4bd6b9e997ac4819987a47dd6aaace3efe214aa274298ae1b8023
+Time: 2025-10-16 13:29:34
+Method: Localhost mail() function
+----------------------------------------
+
+=== EMAIL VERIFIED ===
+User: 221602011@mycput.ac.za (Sanele Zondi)
+Time: 2025-10-16 13:30:19
+Token: cabf692ad6c4bd6b9e997ac4819987a47dd6aaace3efe214aa274298ae1b8023
+----------------------------------------
+=== PASSWORD RESET EMAIL ===
+To: mike.johnson@example.com
+URL: http://localhost/UniStay---Website/reset-password.html?token=fcced8c186c1666f6cf9f2a9a17399b21113feb5105cabf93cdf605d81eabeb0
+Time: 2025-10-16 13:56:55
+----------------------------------------
+
+=== PASSWORD RESET EMAIL ===
+To: john.student@example.com
+URL: http://localhost/UniStay---Website/reset-password.html?token=9744f9ae052aeb7086895bdb9baa2a51d495e5cac011007af1bbee7ba2b602ac
+Time: 2025-10-17 01:19:49
+----------------------------------------
+
+=== PASSWORD RESET EMAIL ===
+To: mike.johnson@example.com
+URL: http://localhost/UniStay---Website/reset-password.html?token=ea4e74bbe78ae5c5896b9ca10ebe49156394513f905d12d51f787bfc25217884
+Time: 2025-10-17 01:52:20
+----------------------------------------
+
+=== PASSWORD RESET EMAIL ===
+To: sarah.wilson@example.com
+URL: http://localhost/UniStay---Website/reset-password.html?token=b8ca5b22e68d081156edfa4efb473fb28a2d83c0b4f89c10dc5a95bdc98aa403
+Time: 2025-10-17 07:52:43
+----------------------------------------
+
+=== EMAIL VERIFICATION ===
+SENT
+To: st.gagashi@gmail.com
+URL: http://localhost/UniStay---Website/verify-email.html?token=7b53701cca7e9fe1f61ee8ffc01d38c9a7686efd1d95660c41b063f6df17b731
+Time: 2025-10-20 13:08:08
+Method: Localhost mail() function
+----------------------------------------
+
+=== EMAIL VERIFIED ===
+User: st.gagashi@gmail.com (Sanele Zondi)
+Time: 2025-10-20 13:08:47
+Token: 7b53701cca7e9fe1f61ee8ffc01d38c9a7686efd1d95660c41b063f6df17b731
+----------------------------------------
+=== EMAIL VERIFICATION ===
+SENT
+To: owethu.tee11@gmail.com
+URL: http://localhost/UniStay---Website/verify-email.html?token=afa023a692368bb1ebd80f58984e1ba23a8c635e6288032b8a49129c3d8fec19
+Time: 2025-10-20 13:09:18
+Method: Localhost mail() function
+----------------------------------------
+
+=== EMAIL VERIFIED ===
+User: owethu.tee11@gmail.com (Owethu Mthembu)
+Time: 2025-10-20 13:09:33
+Token: afa023a692368bb1ebd80f58984e1ba23a8c635e6288032b8a49129c3d8fec19
+----------------------------------------
+=== PASSWORD RESET EMAIL ===
+To: owethu.tee11@gmail.com
+URL: http://localhost/UniStay---Website/reset-password.html?token=6c2d7ae772537f46491cb4ea8910dc62105ca78a49b40ebebe0a73ce82ca2799
+Time: 2025-10-21 19:37:58
+----------------------------------------
+
+=== EMAIL VERIFICATION ===
+SENT
+To: tenant@unistay.com
+URL: http://localhost/UniStay---Website/verify-email.html?token=3f50a1616a38175018f0bf7a7ea7f2aadf28e93409257df8ef3dc90a7242df0c
+Time: 2025-10-24 07:15:37
+Method: Localhost mail() function
+----------------------------------------
+
+=== EMAIL VERIFIED ===
+User: tenant@unistay.com (Unistay Tenant)
+Time: 2025-10-24 07:16:25
+Token: 3f50a1616a38175018f0bf7a7ea7f2aadf28e93409257df8ef3dc90a7242df0c
+----------------------------------------
+=== PASSWORD RESET EMAIL ===
+To: mike.johnson@example.com
+URL: http://localhost/UniStay---Website/reset-password.html?token=68771233820c560bc079dec96eb809c6c18597fea1e844a5f540ce281636fe43
+Time: 2025-10-24 07:25:59
+----------------------------------------
+
+=== PASSWORD RESET EMAIL ===
+To: sarah.wilson@example.com
+URL: http://localhost/UniStay---Website/reset-password.html?token=ca9251c7244b0d7a43f29e0d2faaff3561ec34e0d58bfdb4662a16494d59136b
+Time: 2025-10-24 07:44:55
+----------------------------------------
+
+=== PASSWORD RESET EMAIL ===
+To: david.brown@example.com
+URL: http://localhost/UniStay---Website/reset-password.html?token=d0622f539cedc8d360beccba73ef0fe4e96cd57e2ae9877b3c3d46cb3385ee1e
+Time: 2025-10-24 09:08:52
+----------------------------------------
+
+=== EMAIL VERIFICATION ===
+SENT
+To: emmanuelposholi12@gmail.com
+URL: http://localhost/UniStay---Website/verify-email.html?token=ea64aaca1767fea5a38465af8634008d83f75cad2998cea87cef2d8aa37f902e
+Time: 2025-10-24 10:42:07
+Method: Localhost mail() function
+----------------------------------------
+
+=== EMAIL VERIFIED ===
+User: emmanuelposholi12@gmail.com (Emmanuel Posholi)
+Time: 2025-10-24 10:42:53
+Token: ea64aaca1767fea5a38465af8634008d83f75cad2998cea87cef2d8aa37f902e
+----------------------------------------
+=== PASSWORD RESET EMAIL ===
+To: lisa.chen@example.com
+URL: http://localhost/UniStay---Website/reset-password.html?token=48462a7a18c9e8141e5f035191417c26b53c7568e56f331f65ce7f4f157bde73
+Time: 2025-10-26 16:52:30
+----------------------------------------
+
