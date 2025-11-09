@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add New Property – UniStay</title>
-	 <link rel="stylesheet" href="assets/css/style.css">
     <style>
         * {
             margin: 0;
@@ -45,7 +44,6 @@
         }
 
         main.add-property {
-            max-width: 900px;
             margin: 30px auto;
             padding: 0 20px;
         }
@@ -86,8 +84,6 @@
         }
 
         #addPropertyForm input,
-        #addPropertyForm textarea,
-        #addPropertyForm select {
             width: 100%;
             padding: 12px 15px;
             border: 1px solid #ddd;
@@ -97,8 +93,6 @@
         }
 
         #addPropertyForm input:focus,
-        #addPropertyForm textarea:focus,
-        #addPropertyForm select:focus {
             outline: none;
             border-color: #3498db;
             box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
@@ -117,60 +111,6 @@
 
         .form-group {
             flex: 1;
-        }
-
-        .form-section {
-            margin: 30px 0;
-            padding: 20px;
-            border: 2px solid #e3f2fd;
-            border-radius: 8px;
-            background: #f8fcff;
-        }
-
-        .form-section h3 {
-            color: #1a237e;
-            margin-bottom: 10px;
-        }
-
-        .section-description {
-            color: #666;
-            margin-bottom: 15px;
-            font-size: 14px;
-        }
-
-        .room-entry {
-            border: 1px solid #ddd;
-            padding: 20px;
-            margin: 15px 0;
-            border-radius: 8px;
-            background: white;
-        }
-
-        .btn-remove-room {
-            background: #dc3545;
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-
-        .btn-remove-room:hover {
-            background: #c82333;
-        }
-
-        .btn-secondary {
-            background: #6c757d;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .btn-secondary:hover {
-            background: #545b62;
         }
 
         #images {
@@ -279,19 +219,7 @@
     </style>
 </head>
 <body>
-<header class="header">
-        <div class="container">
-            <div class="header-content">
-                <a href="index.html" class="logo">UniStay</a>
-                <nav class="nav">
-                    <a href="landlord-dashboard.html" class="nav-link">Dashboard</a>
-                    <a href="my-properties.html" class="nav-link">My Properties</a>
-                    <a href="add-property.html" class="nav-link active">Add Property</a>
-                    <a href="profile.html" class="nav-link">Profile</a>
-                    <a href="#" class="nav-link" onclick="logout()">Logout</a>
                 </nav>
-            </div>
-        </div>
     </header>
 
     <main class="add-property">
@@ -299,53 +227,26 @@
         <form id="addPropertyForm" enctype="multipart/form-data">
             <div class="form-row">
                 <div class="form-group">
-                    <label for="title">Property Title *</label>
                     <input type="text" id="title" name="title" required maxlength="100" placeholder="Enter property title">
                 </div>
                 
                 <div class="form-group">
-                    <label for="property_type">Property Type *</label>
-                    <select id="property_type" name="property_type" required>
-                        <option value="">Select Property Type</option>
-                        <option value="apartment">Apartment</option>
-                        <option value="house">House</option>
-                        <option value="townhouse">Townhouse</option>
-                        <option value="condo">Condo</option>
-                        <option value="shared_house">Shared House</option>
-                    </select>
                 </div>
             </div>
 
-            <label for="description">Description *</label>
             <textarea id="description" name="description" required maxlength="2000" placeholder="Describe your property in detail"></textarea>
 
-            <label for="address">Address *</label>
             <input type="text" id="address" name="address" required placeholder="Full property address">
 
             <div class="form-row">
                 <div class="form-group">
-                    <label for="city">City *</label>
                     <input type="text" id="city" name="city" required placeholder="City">
                 </div>
                 
                 <div class="form-group">
-                    <label for="amenities">Property Amenities</label>
-                    <input type="text" id="amenities" name="amenities" placeholder="WiFi, Kitchen, Parking, Laundry, etc.">
-                </div>
             </div>
 
-            <!-- Room Management Section -->
-            <div class="form-section">
-                <h3>Property Rooms</h3>
-                <p class="section-description">Add the individual rooms available in your property. Each room can be booked separately by tenants.</p>
-                
-                <div id="roomsContainer">
-                    <!-- Rooms will be added here dynamically -->
                 </div>
-                
-                <button type="button" id="addRoomBtn" class="btn-secondary">
-                    + Add Another Room
-                </button>
             </div>
 
             <label for="images">Property Images</label>
@@ -359,7 +260,6 @@
         <div id="message"></div>
     </main>
 
-    <!-- ONLY include the external JS file - remove the duplicate script from HTML -->
     <script src="assets/js/add-property.js"></script>
 </body>
 </html>
