@@ -1,138 +1,161 @@
-# UniStay Website
+<div align="center">
 
-A web-based platform that connects **students (tenants)** with **landlords**, enabling property listings, search, booking, payments, messaging, and reviews.
+<img src="docs/images/unistay-banner.png" alt="UniStay" width="820"/>
 
-> This README is a developer-friendly quickstart. For detailed Business Rules and User Guide, see the `/docs` folder (or the PDFs you shared).
+# UniStay Website 🏡🎓
 
----
+**A student accommodation marketplace for listings, bookings, deposits, and reviews.**
 
-## Table of Contents
+[![Status](https://img.shields.io/badge/status-active-success)](#)
+[![Stack](https://img.shields.io/badge/stack-PHP%20%7C%20MySQL%20%7C%20HTML%2FCSS%2FJS-blue)](#)
+[![License](https://img.shields.io/badge/license-edu--project-lightgrey)](#license)
+[![Made By](https://img.shields.io/badge/team-WO2-purple)](#credits)
 
-- [Overview](#overview)
-- [Key Features](#key-features)
-- [Roles & Permissions](#roles--permissions)
-- [Business Rules (Summary)](#business-rules-summary)
-- [Domain Model (ERD)](#domain-model-erd)
-- [Tech Stack](#tech-stack)
-- [Getting Started (Local)](#getting-started-local)
-- [Environment Variables](#environment-variables)
-- [Database & Seed Data](#database--seed-data)
-- [Running the App](#running-the-app)
-- [Test Accounts](#test-accounts)
-- [Core Screens / Flows](#core-screens--flows)
-- [Security & Compliance](#security--compliance)
-- [Logging & Reports](#logging--reports)
-- [Project Structure](#project-structure)
-- [Contributing](#contributing)
-- [License](#license)
-- [Credits](#credits)
+<br/>
+
+<a href="#-quick-start">🚀 Quick Start</a> ·
+<a href="#-features">✨ Features</a> ·
+<a href="#-screens--flows">🧭 Flows</a> ·
+<a href="#-security">🔐 Security</a> ·
+<a href="#-project-structure">🗂️ Structure</a>
+
+</div>
 
 ---
 
-## Overview
-
-**UniStay** is a property rental platform focused on student accommodation. It supports:
-- Tenant discovery and booking of rooms
-- Landlord property onboarding and booking approvals
-- Payment of a **30% deposit** to secure bookings
-- Messaging between tenants and landlords
-- Post-stay reviews and ratings
+> **Tip:** This README is a dev-friendly quickstart. For the full **Business Rules** and **User Guide**, see `/docs` or the PDFs you shared.  
 
 ---
 
-## Key Features
+## 📌 Overview
 
-- **Authentication & Roles**: Email verification, account lockouts after repeated failures.
-- **Property Management**: Create, edit, publish/unpublish properties, with images and availability.
-- **Search & Filters**: City/title search, price and room-type filters.
-- **Bookings**: Tenant requests, landlord approval/rejection, status transitions.
-- **Payments**: Link payments to approved bookings; update booking status to **Paid** when confirmed.
-- **Messaging**: Protected in-app messaging for negotiations and updates.
-- **Reviews**: Tenants can review after a completed stay; moderation pipeline.
-- **Admin**: View & moderate content, activity logs, analytics.
+**UniStay** connects **tenants (students)** with **landlords**. Tenants discover rooms, request bookings, pay a **30% deposit** once approved, chat with landlords, and leave reviews. Landlords onboard properties, manage bookings, and track status.
 
 ---
 
-## Roles & Permissions
+## ✨ Features
 
-- **Tenant**: Search, book available properties, pay deposits, message, write reviews.
-- **Landlord**: Add/manage properties, approve/reject bookings, manage availability, message tenants.
-- **Admin**: Moderate content, view logs & reports, access analytics (no property/booking creation).
+- 🔐 **Auth & Roles** — tenant, landlord, admin; email verification, lockouts on repeated failures.
+- 🏠 **Property Management** — create, edit, publish/unpublish, upload images, set availability.
+- 🔎 **Search & Filters** — city/title keyword, price range, room type.
+- 📝 **Bookings** — request → approve/reject → pay deposit → complete.
+- 💳 **Payments** — one-per-booking; booking becomes **Paid** after deposit confirmation.
+- 💬 **Messaging** — in-app, safe negotiation channels.
+- ⭐ **Reviews** — post-stay ratings; moderation before publish.
+- 🛡️ **Admin** — moderate content, view logs, usage analytics.
 
----
-
-## Business Rules (Summary)
-
-- Unique email for each account; email verification required.
-- Landlords can list multiple properties but cannot book their own listings.
-- Tenants can only book **Available** properties; duplicates (same tenant & property) are blocked.
-- Booking status flow: `Available → Pending Approval → Approved/Rejected → Paid (after deposit)`.
-- Payments are one-per-booking; on success, mark booking **Paid** and issue receipt.
-- Account lock after several failed logins; session timeouts for inactivity.
-- All critical actions (bookings, payments) are logged with timestamp & user ID.
-- Automated email alerts for key events (approvals, payments, password reset).
-- Reviews are allowed post-stay and are moderated before publishing.
-- Compliance: Users must accept ToS/Privacy; listings must meet local rental & safety laws.
-
-> See the Business Rules PDF for the authoritative source.
+> Business rule highlights: unique emails, verified accounts, no landlord self-bookings, duplicate tenant+property bookings blocked, strict status flow & logging.
 
 ---
 
-## Domain Model (ERD)
+## 🧑‍⚖️ Roles & Permissions
 
-Core entities typically include:
-- **User** (Tenant, Landlord, Admin)
-- **Property** (images, amenities, rooms, status)
-- **Booking** (dates, status, tenant, landlord/property link)
-- **Payment** (method, amount, timestamp, booking link)
-- **Message** (sender, recipient/thread, body, created_at)
-- **Review** (rating, comment, booking/property, moderation)
-
-> See the ERD/User Guide for the detailed relationships and status definitions.
+| Role      | Can do                                                                                   |
+|-----------|--------------------------------------------------------------------------------------------|
+| Tenant    | Search, request bookings, pay deposits, message, review after stay                        |
+| Landlord  | Add/manage listings, approve/reject requests, manage availability, message                |
+| Admin     | Moderate reviews/listings, view activity logs & reports (no creation of bookings/listings) |
 
 ---
 
-## Tech Stack
+## 🧩 Domain Model (ERD Preview)
 
-- **Backend**: PHP 8.x (LAMP) *or equivalent server-side framework*
-- **Database**: MySQL 8.x
-- **Web Server**: Apache (XAMPP/MAMP/WAMP) for local dev
-- **Frontend**: HTML/CSS/JS (vanilla or framework of your choice)
-- **Email**: SMTP (e.g., Mailtrap for local dev)
-- **Payments**: Pluggable gateway (stubbed or sandbox in dev)
+```mermaid
+erDiagram
+  USER ||--o{ BOOKING : makes
+  USER ||--o{ PROPERTY : owns
+  PROPERTY ||--o{ BOOKING : reserves
+  BOOKING ||--|| PAYMENT : "has one"
+  BOOKING ||--o{ REVIEW : "can have"
+  USER ||--o{ MESSAGE : sends
+  USER ||--o{ MESSAGE : receives
 
-> If your implementation differs (e.g., Laravel/Symfony or another stack), adjust steps accordingly.
+  USER {
+    int id PK
+    string role  "TENANT|LANDLORD|ADMIN"
+    string name
+    string email UNIQUE
+    string password_hash
+    bool verified
+  }
+
+  PROPERTY {
+    int id PK
+    int landlord_id FK
+    string title
+    string city
+    decimal price
+    string status  "PUBLISHED|UNPUBLISHED"
+  }
+
+  BOOKING {
+    int id PK
+    int property_id FK
+    int tenant_id FK
+    date start_date
+    date end_date
+    string status "PENDING|APPROVED|REJECTED|PAID|COMPLETED"
+  }
+
+  PAYMENT {
+    int id PK
+    int booking_id FK
+    decimal amount
+    string method
+    datetime paid_at
+    string ref
+  }
+
+  REVIEW {
+    int id PK
+    int booking_id FK
+    tinyint rating
+    string comment
+    string moderation "PENDING|APPROVED|REJECTED"
+  }
+
+  MESSAGE {
+    int id PK
+    int sender_id FK
+    int recipient_id FK
+    text body
+    datetime created_at
+  }
+```
 
 ---
 
-## Getting Started (Local)
+## 🚀 Quick Start
 
-### Option A — XAMPP (PHP + MySQL)
+> **Local Dev (XAMPP / LAMP)**
 
-1. Install **XAMPP** and start **Apache** and **MySQL**.
-2. Clone or copy the project into:  
-   - **Windows**: `C:\\xampp\\htdocs\\unistay`  
-   - **macOS**: `/Applications/XAMPP/htdocs/unistay`
-3. Create a database called `unistay` in **phpMyAdmin**.
-4. Configure your DB credentials in `.env` or a config file (see below).
-5. Import schema (`/database/schema.sql`) and seed data (`/database/seed.sql`) if available.
-6. Visit **http://localhost/unistay**.
+```bash
+# 1) Place the repo under your web root
+# Windows: C:\xampp\htdocs\unistay
+# macOS:   /Applications/XAMPP/htdocs/unistay
 
-### Option B — PHP Built-in Server (if framework supports it)
+# 2) Create DB in phpMyAdmin
+# Name: unistay
+
+# 3) Copy .env.example to .env and update values
+# 4) Import database/schema.sql and database/seed.sql (if present)
+# 5) Visit http://localhost/unistay
+```
+
+<details>
+<summary><b>Alternative: PHP built-in server</b></summary>
 
 ```bash
 php -S localhost:8000 -t public
+# then open http://localhost:8000
 ```
-
-Then open `http://localhost:8000`.
+</details>
 
 ---
 
-## Environment Variables
+## 🔧 Environment Variables
 
-Create a `.env` file (or edit your config):
-
-```
+```ini
 APP_ENV=local
 APP_DEBUG=true
 APP_URL=http://localhost/unistay
@@ -155,111 +178,138 @@ PAYMENT_PUBLIC_KEY=pk_test_xxx
 PAYMENT_SECRET_KEY=sk_test_xxx
 ```
 
-> For production, disable debug, use strong passwords, and rotate keys.
+> **Prod notes:** Disable debug, enforce HTTPS, rotate keys, and back up DB & storage.
 
 ---
 
-## Database & Seed Data
+## 🗃️ Database & Seed Data
 
-- **Schema**: `/database/schema.sql` (tables for users, properties, rooms, bookings, payments, messages, reviews)
-- **Seed**: `/database/seed.sql` (optional test users, sample properties, demo bookings)
+- **Schema**: `database/schema.sql` (users, properties, bookings, payments, messages, reviews)
+- **Seed**  : `database/seed.sql` (demo accounts, sample properties, example bookings)
 
-If you don’t have SQL files yet, export from your current DB or generate via migrations.
-
----
-
-## Running the App
-
-- **Local**: `http://localhost/unistay`
-- **Login/Registration**: Email verification required.
-- **Account Lock**: After repeated failed logins, an account is temporarily locked.
-- **Deposits**: Tenants pay **30%** deposit on approved bookings.
+> No SQL files yet? Export your current DB or generate migrations to match the ERD.
 
 ---
 
-## Test Accounts
+## 🧭 Screens & Flows
 
-> Replace with real seeded users if you have them.
+```mermaid
+sequenceDiagram
+  actor T as Tenant
+  participant W as UniStay Web
+  participant L as Landlord
+  participant P as Payment Gateway
 
-- **Tenant**
-  - Email: `tenant@example.com`
-  - Password: `Tenant!234`
-- **Landlord**
-  - Email: `landlord@example.com`
-  - Password: `Landlord!234`
-- **Admin**
-  - Email: `admin@example.com`
-  - Password: `Admin!234`
-
----
-
-## Core Screens / Flows
-
-- **Home** → **Register/Login**
-- **Tenant**: Properties → Property Details → Book Now → Confirm & Pay Deposit → My Bookings → Review
-- **Landlord**: Dashboard → Add Property → Booking Requests (Approve/Reject) → My Properties
-- **All**: Messages → Notifications
-- **Admin**: Moderation → Activity Logs → Analytics
-
----
-
-## Security & Compliance
-
-- Passwords & sensitive fields encrypted at rest.
-- Server-side validation for all forms; reject empty/invalid data.
-- Sessions expire after inactivity; CSRF protection where applicable.
-- Listings must follow local housing, zoning, and safety regulations.
-- Terms of Service & Privacy Policy acceptance recorded.
+  T->>W: Browse & filter properties
+  T->>W: Request booking
+  W->>L: Notify: "Pending approval"
+  L->>W: Approve/Reject
+  alt Approved
+    W->>T: Approval email + deposit link (30%)
+    T->>P: Pay deposit
+    P-->>W: Payment success
+    W->>T: Booking marked PAID
+  else Rejected
+    W->>T: Rejection email
+  end
+```
 
 ---
 
-## Logging & Reports
+## 🧪 Test Accounts (sample)
 
-- All booking/payment actions are logged with timestamps & user IDs.
-- Monthly reports for user activity, bookings, and payments.
-- Admin analytics for property performance (views, bookings, feedback).
+- **Tenant** → `tenant@example.com` / `Tenant!234`  
+- **Landlord** → `landlord@example.com` / `Landlord!234`  
+- **Admin** → `admin@example.com` / `Admin!234`
+
+> Replace with your seeded users.
 
 ---
 
-## Project Structure
+## 🔐 Security
+
+- Strong server-side validation on every form (reject empty/invalid).
+- Passwords hashed; sensitive fields encrypted at rest.
+- CSRF protection where applicable; session timeout on inactivity.
+- Account lockouts after repeated failed logins.
+- Audit logging for bookings & payments (user ID + timestamp).
+- Legal: ToS/Privacy acceptance; listings should meet local housing/safety laws.
+
+---
+
+## 🧾 Logs & Reports
+
+- Action logs for bookings/payments.
+- Monthly activity & revenue snapshots.
+- Property performance analytics (views → bookings → reviews).
+
+---
+
+## 🗂️ Project Structure
 
 ```
 unistay/
-├─ public/                 # Public web root (index.php, assets)
-├─ app/                    # Application code (controllers, models, services)
-├─ resources/              # Views/templates, emails
-├─ database/
-│  ├─ schema.sql           # DB schema
-│  ├─ seed.sql             # Seed data
-├─ storage/                # Logs, uploads
-├─ config/                 # App & environment config
-├─ docs/                   # Business Rules, User Guide, ERD
+├─ public/                 # index.php, assets
+├─ app/                    # controllers, models, services
+├─ resources/              # views/templates, emails
+├─ database/               # schema.sql, seed.sql
+├─ storage/                # logs, uploads
+├─ config/                 # env & app config
+├─ docs/                   # Business Rules, User Guide, ERD, images
 └─ README.md
 ```
 
-> Adjust to match your framework (e.g., Laravel: `app/`, `routes/`, `resources/`, etc.).
+---
+
+## 🧑‍💻 Contributing
+
+- Branch: `git checkout -b feature/<name>`  
+- Commit: `git commit -m "feat: concise summary"`  
+- PR: open, request review, pass checks.
+
+**Guidelines**  
+- Keep controllers thin; move rules to services/policies.  
+- Validate inputs centrally.  
+- Add tests for booking status flow, payments, and review moderation.  
+- Avoid duplicating business logic across controllers/views.
 
 ---
 
-## Contributing
+## ✅ Release Checklist
 
-1. Create a feature branch: `git checkout -b feature/awesome`
-2. Commit your changes: `git commit -m "feat: add awesome thing"`
-3. Push the branch: `git push origin feature/awesome`
-4. Open a pull request and request a review.
-
-Coding standards: keep controllers thin, validate inputs, add tests for business rules, and avoid duplicating logic.
-
----
-
-## License
-
-This project is for educational purposes under your course submission. Add an explicit license if you plan to open-source it.
+- [ ] All forms validated server-side
+- [ ] Booking status transitions tested
+- [ ] Deposit captured (30%) and receipt generated
+- [ ] Email/SMS templates verified
+- [ ] Admin moderation working
+- [ ] Logs capture user + timestamp
+- [ ] Backups configured
 
 ---
 
-## Credits
+## 📚 Docs
 
-- **Team WO2** — UniStay Website
-- Project supervisors and course: PRT372S
-- Documentation: Business Rules, User Guide, ERD PDFs.
+- `/docs/UniStay_Business_Rules_WO2.pdf`  
+- `/docs/Group_WO2_System Documentation.docx`  
+- `/docs/Group_WO2_User Guide.pdf`  
+
+> If your PDFs live elsewhere, place copies into `/docs` for easy access.
+
+---
+
+## 📜 License
+
+This project is for educational purposes (course submission).  
+Add an explicit license if open-sourcing later.
+
+---
+
+## 🙌 Credits
+
+**Team WO2 — UniStay Website**  
+Lecturer/Module: PRT372S  
+Docs: Business Rules, User Guide, ERD
+
+---
+
+<sub>Made with ❤️ by Sanele Trueman Zondi</sub>
